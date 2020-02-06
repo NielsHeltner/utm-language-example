@@ -5,25 +5,27 @@ mission mark:
 	slut: navigation_point
 	omraader: area
 implementation
+	path += start -> omraader with planner straight
+	path += omraader -> slut with planner straight
+
+constraints
+	hvornaar within [08:00 to 18:00] && !(hvornaar within [12:00 to 13:00])
+	path within hvornaar
+
+conflicts
+	!(path within omraader)
 
 
-path p = 2
-p = hvornaar = 4
 
-[13:23 to 321:432[ ]13:23 to 321:432]
 
-]13:23 to 321:432[
 
 [13:23 to 321:432]
-
-
+[13:23 to 321:432[
+]13:23 to 321:432[
+]13:23 to 321:432]
 
 hvornaar = 2
 
 
-55 = 43
-
-
-
-
 (123.3, 49328.45) < 87654321 && 321 within [12:32 to 54:78] || 12:43
+

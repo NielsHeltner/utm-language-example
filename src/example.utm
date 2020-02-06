@@ -2,11 +2,14 @@ mission mark:
 	hvornaar: time_interval
 	starttime: time
 	start: navigation_point
+	punkt1: navigation_point
+	punkt2: navigation_point
 	slut: navigation_point
 	omraader: area
 implementation
-	path += start -> omraader with planner straight
+	path += start -> omraader -> punkt1 -> punkt2 -> slut with planner straight
 	path += omraader -> slut with planner straight
+	path += omraader with planner straight
 
 constraints
 	hvornaar within [08:00 to 18:00] && !(hvornaar within [12:00 to 13:00])

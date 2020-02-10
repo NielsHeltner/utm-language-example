@@ -1,0 +1,32 @@
+mission mark:
+	hvornaar: time_interval
+	starttime: time
+	start: navigation_point
+	punkt1: navigation_point
+	punkt2: navigation_point
+	slut: navigation_point
+	omraader: area
+implementation
+	path += start -> omraader -> punkt1 -> punkt2 -> slut with planner straight
+	path += omraader -> slut with planner straight
+	path += omraader with planner straight
+
+constraints
+	hvornaar within [08:00 to 18:00] && !(hvornaar within [12:00 to 13:00])
+	path within hvornaar
+
+conflicts
+	!(path within omraader)
+
+
+
+[13:23 to 321:432]
+[13:23 to 321:432[
+]13:23 to 321:432[
+]13:23 to 321:432]
+
+hvornaar = 2
+
+
+(123.3, 49328.45) < 87654321 && 321 within [12:32 to 54:78] || 12:43
+

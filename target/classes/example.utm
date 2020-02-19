@@ -4,15 +4,35 @@ mission mark:
 	start: navigation_point
 	punkt1: navigation_point
 	punkt2: navigation_point
+	punkt3: navigation_point
+	punkt4: navigation_point
+	punkt5: navigation_point
+	punkt6: navigation_point
+	punkt7: navigation_point
 	slut: navigation_point
-	omraader: area
+	omraader: area[]
 	omraader2: area
 default planner straight
 implementation
-	path += start -> punkt1
-	path += punkt2 -> omraader
+	path += start -> punkt1 -> punkt2
+	
+	path += punkt3 -> punkt4
+	
+	path += punkt5 -> punkt6 -> punkt7 -> slut
+	
+	path += cover omraader
+	
+	//path += each omraader
+	
+	
+	
+	
+	
+	
+	/*path += punkt2 -> omraader
 	path += cover omraader
 	path += omraader -> slut
+	
 	
 	
 	path += start -> punkt1 -> cover omraader -> slut
@@ -22,7 +42,7 @@ implementation
 	path += cover omraader -> cover omraader2 -> slut
 	
 	
-	path += start -> cover each omraader -> slut
+	path += start -> cover each omraader -> slut*/
 	
 	
 constraints
@@ -31,6 +51,9 @@ constraints
 
 conflicts
 	!(path within omraader)
+	
+	
+	2 + 5 + 6
 
 
 

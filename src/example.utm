@@ -7,9 +7,17 @@ mission mark:
 	slut: navigation_point
 	omraader: area
 implementation
-	path += start -> omraader -> punkt1 -> punkt2 -> slut with planner straight
-	path += omraader -> slut with planner straight
+	//path += start -> start with planner straight
+	//path += start -> omraader -> punkt1 -> punkt2 -> slut -> omraader with planner straight
 	path += omraader with planner straight
+	
+	path += each omraader with planner coverage connect with planner straight
+	//path += omraader with planner straight
+	//path += omraader -> slut with planner straight
+	
+
+
+
 
 constraints
 	hvornaar within [08:00 to 18:00] && !(hvornaar within [12:00 to 13:00])
@@ -17,6 +25,7 @@ constraints
 
 conflicts
 	!(path within omraader)
+
 
 
 

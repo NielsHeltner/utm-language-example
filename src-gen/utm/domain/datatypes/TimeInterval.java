@@ -22,7 +22,7 @@ public class TimeInterval {
 		return to;
 	}
 	
-	public boolean getÕnclusiveFrom() {
+	public boolean get√çnclusiveFrom() {
 		return inclusiveFrom;
 	}
 	

@@ -14,11 +14,11 @@ mission mark:
 	omraader2: area
 default planner straight
 implementation
-	path += start -> punkt1 -> punkt2
+	path += start to punkt1 to punkt2
 	
-	path += punkt3 -> punkt4
+	path += punkt3 to punkt4
 	
-	path += punkt5 -> punkt6 -> punkt7 -> slut
+	path += punkt5 to punkt6 zigzag to punkt7 to slut
 	
 	path += cover omraader
 	
@@ -29,20 +29,20 @@ implementation
 	
 	
 	
-	/*path += punkt2 -> omraader
+	/*path += punkt2 to omraader
 	path += cover omraader
-	path += omraader -> slut
+	path += omraader to slut
 	
 	
 	
-	path += start -> punkt1 -> cover omraader -> slut
+	path += start to punkt1 to cover omraader to slut
 	
-	path += cover omraader -> omraader2
+	path += cover omraader to omraader2
 	
-	path += cover omraader -> cover omraader2 -> slut
+	path += cover omraader to cover omraader2 to slut
 	
 	
-	path += start -> cover each omraader -> slut*/
+	path += start to cover each omraader to slut*/
 	
 	
 constraints

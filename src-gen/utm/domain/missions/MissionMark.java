@@ -89,6 +89,5 @@ public class MissionMark {
 		return this.omraader2;
 	}
 	
-	
 }
 

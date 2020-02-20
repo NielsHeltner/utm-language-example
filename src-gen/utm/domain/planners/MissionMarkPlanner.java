@@ -5,13 +5,13 @@ import utm.domain.missions.MissionMark;
 
 public class MissionMarkPlanner {
 	
-	private String straight = "straight";
+	private String defaultPlanner = "straight";
 	
 	public NavigationPoint[] getPlan(MissionMark mission) {
 		straight(start).straight(punkt1).straight(punkt2).
 		straight(punkt3).straight(punkt4).
-		straight(punkt5).straight(punkt6).straight(punkt7).straight(slut).
-		cover(omraader)
+		straight(punkt5).straight(punkt6).zigzag(punkt7).straight(slut).
+		cover(omraader);
 	}
 	
 	public NavigationPoint[] straight(NavigationPoint a, NavigationPoint b) {

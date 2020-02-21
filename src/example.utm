@@ -51,6 +51,7 @@ constraints
 
 conflicts
 	!(path within omraader)
+	//if otherDrone.type == fixed_wing && otherDrone.path within 1km of path
 	
 	
 	2 + 5 + 6

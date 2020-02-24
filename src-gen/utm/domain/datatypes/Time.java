@@ -1,16 +1,16 @@
 package utm.domain.datatypes;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Time { 
 
-	private LocalDate time;
+	private LocalDateTime time;
 	
-	public Time(LocalDate time) {
+	public Time(LocalDateTime time) {
 		this.time = time;
 	}
 	
-	public LocalDate getTime() {
+	public LocalDateTime getTime() {
 		return time;
 	}
 	

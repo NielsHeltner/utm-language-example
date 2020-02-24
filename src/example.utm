@@ -47,14 +47,23 @@ implementation
 	
 constraints
 	hvornaar within [08:00 to 18:00] && !(hvornaar within [12:00 to 13:00])
-	path within hvornaar
+	path within hvornaar 
 
 conflicts
 	!(path within omraader)
 	//if otherDrone.type == fixed_wing && otherDrone.path within 1km of path
 	
 	
-	2 + 5 + 6
+mission follow_vehicle:
+	start: navigation_point
+	slut: navigation_point
+	zone: area
+	
+implementation
+	start to zone to slut
+	
+constraints
+conflicts
 
 
 
@@ -65,8 +74,6 @@ conflicts
 [13:23 to 321:432[
 ]13:23 to 321:432[
 ]13:23 to 321:432]
-
-hvornaar = 2
 
 
 (123.3, 49328.45) < 87654321 && 321 within [12:32 to 54:78] || 12:43

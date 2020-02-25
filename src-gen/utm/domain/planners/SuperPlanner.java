@@ -1,6 +1,8 @@
 package utm.domain.planners;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import utm.domain.datatypes.Area;
@@ -10,11 +12,10 @@ public abstract class SuperPlanner {
 	
 	protected List<NavigationPoint> path = new ArrayList<>();
 	private NavigationPoint start;
-	protected Straight straightPlanner;
 	//private UniFly unifly;
 	
 	
-	public SuperPlanner() {}
+	public SuperPlanner(String a) {}
 	
 	public abstract boolean verifyConstraints();
 	
@@ -31,14 +32,36 @@ public abstract class SuperPlanner {
 	}
 	
 	public List<NavigationPoint> straight(NavigationPoint start, NavigationPoint end) {
-		
+		return Arrays.asList(start, end);
 	}
 	
 	public void straight(NavigationPoint start, Area end) {
 		straight(start, end.getBoundingBox().get(0));
 	}
 	
+	public List<NavigationPoint> straight(NavigationPoint start, List<NavigationPoint> end) {
+		List<NavigationPoint> result = straight(start, end.get(0));
+		result.addAll(end);
+		return result;
+	}
+	
+	
+	public void straight(Area start, Area end) {
+		
+	}
+	
 	public void straight(Area start, NavigationPoint end) {
+		straight(start, end);
+	}
+	
+	public void straight(Area start, List<NavigationPoint> end) {
+		straight(start, end);
+	}
+	
+	
+	
+	
+	public void straight(List<NavigationPoint> start, List<NavigationPoint> end) {
 		straight(start, end);
 	}
 	
@@ -48,27 +71,14 @@ public abstract class SuperPlanner {
 		return result;
 	}
 	
-	public void straight(List<NavigationPoint> start, List<NavigationPoint> end) {
-		straight(start, end);
-	}
-	
-	public List<NavigationPoint> straight(NavigationPoint start, List<NavigationPoint> end) {
-		List<NavigationPoint> result = straight(start, end.get(0));
-		result.addAll(end);
-		return result;
-	}
-	
 	public void straight(List<NavigationPoint> start, Area end) {
 		straight(start, end);
 	}
 	
-	public void straight(Area start, List<NavigationPoint> end) {
-		straight(start, end);
-	}
 	
-	public void straight(Area start, Area end) {
-		
-	}
+	
+	
+	
 	
 	public List<NavigationPoint> cover(Area area) {
 		return null;

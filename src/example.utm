@@ -14,13 +14,15 @@ mission mark:
 	omraader2: area
 default planner straight
 implementation
-	path += start to punkt1 to punkt2
+	path += start to omraader zigzag to omraader
+	path += start to cover omraader
+	/*path += start to punkt1 to punkt2
 	
 	path += punkt3 to punkt4
 	
 	path += punkt5 to punkt6 zigzag to punkt7 to slut
 	
-	path += cover omraader
+	path += cover omraader*/
 	
 	//path += each omraader
 	
@@ -56,11 +58,15 @@ conflicts
 	
 mission follow_vehicle:
 	start: navigation_point
-	slut: navigation_point
+	point1: navigation_point
 	zone: area
-	
+	point2: navigation_point
+	end: navigation_point
+default planner straight
 implementation
-	start to zone to slut
+	path += start to point1 to cover zone to point2
+	path += end
+
 	
 constraints
 conflicts

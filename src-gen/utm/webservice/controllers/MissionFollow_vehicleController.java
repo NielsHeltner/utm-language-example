@@ -7,42 +7,42 @@ import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiRequestBody;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import utm.webservice.objects.ErrorResponse;
-import utm.domain.missions.MissionMark;
+import utm.domain.missions.MissionFollow_vehicle;
 
-public class MissionMarkController {
+public class MissionFollow_vehicleController {
 	
 	@OpenApi(
-		path = "/api/missions/mark", 
+		path = "/api/missions/follow_vehicle", 
 		method = HttpMethod.GET, 
 		summary = "Summary", 
-		operationId = "getMissionMark", 
+		operationId = "getMissionFollow_vehicle", 
 		description = "Description", 
-		tags = {"MissionMark"}, 
+		tags = {"MissionFollow_vehicle"}, 
 		responses = {
 			@OpenApiResponse(status = "200", content = {@OpenApiContent(from = String.class)})
 		}
 	)
-	public static void getMissionMark(Context ctx) {
+	public static void getMissionFollow_vehicle(Context ctx) {
 		ctx.status(200);
 	}
 	
 	@OpenApi(
-		path = "/api/missions/mark", 
+		path = "/api/missions/follow_vehicle", 
 		method = HttpMethod.POST, 
 		summary = "Summary", 
-		operationId = "postMissionMark", 
+		operationId = "postMissionFollow_vehicle", 
 		description = "Description", 
-		tags = {"MissionMark"}, 
-		requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = MissionMark.class)}), 
+		tags = {"MissionFollow_vehicle"}, 
+		requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = MissionFollow_vehicle.class)}), 
 		responses = {
 			@OpenApiResponse(status = "201"), 
 			@OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)})
 		}
 	)
-	public static void postMissionMark(Context ctx) {
-		// Populate MissionMark object:
-		//		MissionMark missionInfo = ctx.bodyAsClass(MissionMark.class)
-		// Call utm.domain.missions.planners.MissionMarkPlanner.getPlan(missionInfo);
+	public static void postMissionFollow_vehicle(Context ctx) {
+		// Populate MissionFollow_vehicle object:
+		//		MissionFollow_vehicle missionInfo = ctx.bodyAsClass(MissionFollow_vehicle.class)
+		// Call utm.domain.missions.planners.MissionFollow_vehiclePlanner.getPlan(missionInfo);
 		ctx.status(200);
 	}
 	

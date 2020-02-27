@@ -2,19 +2,19 @@ package utm.domain.datatypes;
 
 public class NavigationPoint {
 	
-	private String lat;
-	private String lon;
+	private double lat;
+	private double lon;
 	
-	public NavigationPoint(String lat, String lon) {
+	public NavigationPoint(double lat, double lon) {
 		this.lat = lat;
 		this.lon = lon;
 	}
 	
-	public String getLat() {
+	public double getLat() {
 		return lat;
 	}
 	
-	public String getLon() {
+	public double getLon() {
 		return lon;
 	}
 	

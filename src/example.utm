@@ -64,7 +64,7 @@ mission follow_vehicle:
 	end: navigation_point
 default planner straight
 implementation
-	path += start to point1 to cover zone to point2
+	path += start to (point1 to zone)
 	path += end
 
 	

@@ -1,86 +1,37 @@
-mission mark:
-	hvornaar: time_interval
-	starttime: time
-	start: navigation_point
-	punkt1: navigation_point
-	punkt2: navigation_point
-	punkt3: navigation_point
-	punkt4: navigation_point
-	punkt5: navigation_point
-	punkt6: navigation_point
-	punkt7: navigation_point
-	slut: navigation_point
-	omraader: area[]
-	omraader2: area
-default planner straight
-implementation
-	path += start to omraader zigzag to omraader
-	path += start to cover omraader
-	/*path += start to punkt1 to punkt2
-	
-	path += punkt3 to punkt4
-	
-	path += punkt5 to punkt6 zigzag to punkt7 to slut
-	
-	path += cover omraader*/
-	
-	//path += each omraader
-	
-	
-	
-	
-	
-	
-	/*path += punkt2 to omraader
-	path += cover omraader
-	path += omraader to slut
-	
-	
-	
-	path += start to punkt1 to cover omraader to slut
-	
-	path += cover omraader to omraader2
-	
-	path += cover omraader to cover omraader2 to slut
-	
-	
-	path += start to cover each omraader to slut*/
-	
-	
-constraints
-	hvornaar within [08:00 to 18:00] && !(hvornaar within [12:00 to 13:00])
-	path within hvornaar 
 
-conflicts
-	!(path within omraader)
-	//if otherDrone.type == fixed_wing && otherDrone.path within 1km of path
-	
-	
-mission follow_vehicle:
+mission field:
+	when: time_interval
 	start: navigation_point
 	point1: navigation_point
 	zone: area
+	zones: area[]
 	point2: navigation_point
 	end: navigation_point
-default planner straight
 implementation
+uses planner cover
+uses planner straight default
 	path += start to (point1 to zone)
 	path += end
 
 	
 constraints
+	when within [08:00 ; 18:00] && !(when within [12:00 ; 13:00])
+	path within when 
+
 conflicts
+	!(path within zones)
+	//if otherDrone.type == fixed_wing && otherDrone.path within 1km of path
 
 
 
 
 
+/*
+[13:23 ; 321:432]
+[13:23 ; 321:432[
+]13:23 ; 321:432[
+]13:23 ; 321:432]
 
-[13:23 to 321:432]
-[13:23 to 321:432[
-]13:23 to 321:432[
-]13:23 to 321:432]
 
-
-(123.3, 49328.45) < 87654321 && 321 within [12:32 to 54:78] || 12:43
-
+(123.3, 49328.45) < 87654321 && 321 within [12:32 ; 54:78] || 12:43
+*/

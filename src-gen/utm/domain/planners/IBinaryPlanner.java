@@ -1,28 +1,68 @@
 package utm.domain.planners;
 
-import java.util.List;
-
-import utm.domain.datatypes.Area;
-import utm.domain.datatypes.NavigationPoint;
+import utm.idsl.metamodel.NavigationPointPlan;
+import utm.idsl.metamodel.AreaPlan;
+import utm.domain.planners.CompositePlan;
+import utm.idsl.metamodel.PlanComponent;
 
 public interface IBinaryPlanner {
 	
-	List<NavigationPoint> plan(NavigationPoint start, NavigationPoint end);
+	CompositePlan plan(NavigationPointPlan from, NavigationPointPlan to);
 	
-	List<NavigationPoint> plan(NavigationPoint start, Area end);
+	CompositePlan plan(NavigationPointPlan from, AreaPlan to);
 	
-	List<NavigationPoint> plan(NavigationPoint start, List<NavigationPoint> end);
+	CompositePlan plan(NavigationPointPlan from, CompositePlan to);
 	
-	List<NavigationPoint> plan(Area start, NavigationPoint end);
+	CompositePlan plan(AreaPlan from, NavigationPointPlan to);
 	
-	List<NavigationPoint> plan(Area start, Area end);
+	CompositePlan plan(AreaPlan from, AreaPlan to);
 	
-	List<NavigationPoint> plan(Area start, List<NavigationPoint> end);
+	CompositePlan plan(AreaPlan from, CompositePlan to);
 	
-	List<NavigationPoint> plan(List<NavigationPoint> start, NavigationPoint end);
+	CompositePlan plan(CompositePlan from, NavigationPointPlan to);
 	
-	List<NavigationPoint> plan(List<NavigationPoint> start, Area end);
+	CompositePlan plan(CompositePlan from, AreaPlan to);
 	
-	List<NavigationPoint> plan(List<NavigationPoint> start, List<NavigationPoint> end);
+	CompositePlan plan(CompositePlan from, CompositePlan to);
 	
+	
+	default CompositePlan plan(PlanComponent first, PlanComponent second) {
+		if (first instanceof NavigationPointPlan && second instanceof NavigationPointPlan) {
+			return plan((NavigationPointPlan) first, (NavigationPointPlan) second);
+		}
+		
+		if (first instanceof NavigationPointPlan && second instanceof AreaPlan) {
+			return plan((NavigationPointPlan) first, (AreaPlan) second);
+		}
+		
+		if (first instanceof NavigationPointPlan && second instanceof CompositePlan) {
+			return plan((NavigationPointPlan) first, (CompositePlan) second);
+		}
+		
+		if (first instanceof AreaPlan && second instanceof NavigationPointPlan) {
+			return plan((AreaPlan) first, (NavigationPointPlan) second);
+		}
+		
+		if (first instanceof AreaPlan && second instanceof AreaPlan) {
+			return plan((AreaPlan) first, (AreaPlan) second);
+		}
+		
+		if (first instanceof AreaPlan && second instanceof CompositePlan) {
+			return plan((AreaPlan) first, (CompositePlan) second);
+		}
+		
+		if (first instanceof CompositePlan && second instanceof NavigationPointPlan) {
+			return plan((CompositePlan) first, (NavigationPointPlan) second);
+		}
+		
+		if (first instanceof CompositePlan && second instanceof AreaPlan) {
+			return plan((CompositePlan) first, (AreaPlan) second);
+		}
+		
+		if (first instanceof CompositePlan && second instanceof CompositePlan) {
+			return plan((CompositePlan) first, (CompositePlan) second);
+		}
+		
+		return null;
+	}
 }

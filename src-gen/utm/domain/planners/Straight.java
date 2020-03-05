@@ -3,71 +3,71 @@ package utm.domain.planners;
 import java.util.ArrayList;
 import java.util.List;
 
-import utm.domain.datatypes.Area;
-import utm.domain.datatypes.NavigationPoint;
+import utm.idsl.metamodel.AreaPlan;
+import utm.idsl.metamodel.NavigationPointPlan;
 
 public class Straight implements IBinaryPlanner {
 	
 	@Override
-	public List<NavigationPoint> plan(NavigationPoint start, NavigationPoint end) {
+	public CompositePlan plan(NavigationPointPlan from, NavigationPointPlan to) {
 		List<NavigationPoint> result = new ArrayList<>();
-		result.add(start);
-		result.add(end);
+		result.add(from);
+		result.add(to);
 		return result;
 	}
 	
 	@Override
-	public List<NavigationPoint> plan(NavigationPoint start, Area end) {
-		return plan(start, end.getBoundingBox().get(0)); // TODO: util method for selecting point in Area closest to NavPoint
+	public CompositePlan plan(NavigationPointPlan from, AreaPlan to) {
+		return plan(from, to.getBoundingBox().get(0)); // TODO: util method for selecting point in Area closest to NavPoint
 	}
 	
 	@Override
-	public List<NavigationPoint> plan(NavigationPoint start, List<NavigationPoint> end) {
-		List<NavigationPoint> result = plan(start, end.get(0));
-		result.addAll(end);
+	public CompositePlan plan(NavigationPointPlan from, CompositePlan to) {
+		List<NavigationPoint> result = plan(from, to.get(0));
+		result.addAll(to);
 		return result;
 	}
 	
 	
 	@Override
-	public List<NavigationPoint> plan(Area start, Area end) {
-		return plan(start.getBoundingBox().get(start.getBoundingBox().size() - 1), end.getBoundingBox().get(0)); // TODO: util method for selecting point in Area closest to Area
+	public CompositePlan plan(AreaPlan from, AreaPlan to) {
+		return plan(from.getBoundingBox().get(from.getBoundingBox().size() - 1), to.getBoundingBox().get(0)); // TODO: util method for selecting point in Area closest to Area
 	}
 	
 	@Override
-	public List<NavigationPoint> plan(Area start, NavigationPoint end) {
-		return plan(start.getBoundingBox().get(start.getBoundingBox().size() - 1), end); // TODO: util method for selecting point in Area closest to NavPoint
+	public CompositePlan plan(AreaPlan from, NavigationPointPlan to) {
+		return plan(from.getBoundingBox().get(from.getBoundingBox().size() - 1), to); // TODO: util method for selecting point in Area closest to NavPoint
 	}
 	
 	@Override
-	public List<NavigationPoint> plan(Area start, List<NavigationPoint> end) {
+	public CompositePlan plan(AreaPlan from, CompositePlan to) {
 		// possibly reduces to method above
-		List<NavigationPoint> result = plan(start.getBoundingBox().get(start.getBoundingBox().size() - 1), end.get(0)); // TODO: util method for selecting point in Area closest to NavPoint
-		result.addAll(end);
+		List<NavigationPoint> result = plan(from.getBoundingBox().get(from.getBoundingBox().size() - 1), to.get(0)); // TODO: util method for selecting point in Area closest to NavPoint
+		result.addAll(to);
 		return result;
 	}
 	
 	
 	@Override
-	public List<NavigationPoint> plan(List<NavigationPoint> start, List<NavigationPoint> end) {
-		List<NavigationPoint> result = start;
-		result.addAll(plan(start.get(start.size() - 1), end.get(0)));
-		result.addAll(end);
+	public CompositePlan plan(CompositePlan from, CompositePlan to) {
+		List<NavigationPoint> result = from;
+		result.addAll(plan(from.get(from.size() - 1), to.get(0)));
+		result.addAll(to);
 		return result;
 	}
 	
 	@Override
-	public List<NavigationPoint> plan(List<NavigationPoint> start, NavigationPoint end) {
-		List<NavigationPoint> result = start;
-		result.addAll(plan(start.get(start.size() - 1), end));
+	public CompositePlan plan(CompositePlan from, NavigationPointPlan to) {
+		List<NavigationPoint> result = from;
+		result.addAll(plan(from.get(from.size() - 1), to));
 		return result;
 	}
 	
 	@Override
-	public List<NavigationPoint> plan(List<NavigationPoint> start, Area end) {
+	public CompositePlan plan(CompositePlan from, AreaPlan to) {
 		// possibly reduces to method above
-		List<NavigationPoint> result = start;
-		result.addAll(plan(start.get(start.size() - 1), end.getBoundingBox().get(0))); // TODO: util method for selecting point in Area closest to NavPoint
+		List<NavigationPoint> result = from;
+		result.addAll(plan(from.get(from.size() - 1), to.getBoundingBox().get(0))); // TODO: util method for selecting point in Area closest to NavPoint
 		return result;
 	}
 	

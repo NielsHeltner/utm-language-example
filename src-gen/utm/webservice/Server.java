@@ -15,40 +15,11 @@ import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 import utm.webservice.objects.ErrorResponse;
-import utm.webservice.controllers.MissionMarkController;
-import utm.webservice.controllers.MissionFollow_vehicleController;
-
-// imports for test
-import utm.domain.datatypes.NavigationPoint;
-import utm.domain.datatypes.Area;
-import utm.domain.missions.MissionFollow_vehicle;
-import utm.domain.missions.planners.MissionFollow_vehiclePlanner;
-import java.util.Arrays;
+import utm.webservice.controllers.MissionFieldController;
 
 public class Server {
 
 	public static void main(String[] args) {
-		NavigationPoint start = new NavigationPoint("0", "0");
-		NavigationPoint point1 = new NavigationPoint("1", "1");
-		NavigationPoint point2 = new NavigationPoint("9", "9");
-		NavigationPoint end = new NavigationPoint("10", "10");
-		
-		Area zone = new Area(Arrays.asList(
-			new NavigationPoint("3", "3"), 
-			new NavigationPoint("4", "4"), 
-			new NavigationPoint("5", "5"), 
-			new NavigationPoint("6", "6")
-		));
-		
-		MissionFollow_vehicle mission = new MissionFollow_vehicle(start, point1, zone, point2, end);
-		MissionFollow_vehiclePlanner planner = new MissionFollow_vehiclePlanner(mission);
-
-		for (NavigationPoint p : planner.createPlan()) {
-			System.out.println(p.getLat() + " " + p.getLon());
-		}
-		
-		
-		
         Javalin.create(config -> {
         	config.registerPlugin(getConfiguredOpenApiPlugin());
         	config.defaultContentType = "application/json";
@@ -60,13 +31,9 @@ public class Server {
 				path("api", () -> {
 					get(ctx -> ctx.redirect("swagger-ui"));
 					path("missions", () -> {
-						path("mark", () -> {
-							get(MissionMarkController::getMissionMark);
-							post(MissionMarkController::postMissionMark);
-						});
-						path("follow_vehicle", () -> {
-							get(MissionFollow_vehicleController::getMissionFollow_vehicle);
-							post(MissionFollow_vehicleController::postMissionFollow_vehicle);
+						path("field", () -> {
+							get(MissionFieldController::getMissionField);
+							post(MissionFieldController::postMissionField);
 						});
 					});
 				});

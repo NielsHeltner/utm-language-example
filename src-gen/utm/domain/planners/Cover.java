@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import utm.domain.datatypes.Area;
-import utm.domain.datatypes.NavigationPoint;
+import utm.idsl.metamodel.AreaPlan;
+import utm.idsl.metamodel.NavigationPointPlan;
 
 public class Cover implements IUnaryPlanner {
 	
@@ -16,18 +16,23 @@ public class Cover implements IUnaryPlanner {
 	}
 	
 	@Override
-	public List<NavigationPoint> plan(Area area) { //TODO: maybe second argument, so it knows where to end?
+	public CompositePlan plan(AreaPlan area) { //TODO: maybe second argument, so it knows where to end?
 		return area.getBoundingBox(); // TODO: method for calcuating NavPoints covering the area
 	}
 	
 	@Override
-	public List<NavigationPoint> plan(List<Area> areas) {
+	public CompositePlan plan(List<AreaPlan> areas) {
 		List<NavigationPoint> result = new ArrayList<>();
 		areas.stream().reduce((area1, area2) -> {
 			result.addAll(connector.plan(plan(area1), area2));
 			return area2;
 		});
 		return result;
+	}
+	
+	@Override
+	public CompositePlan plan(EachPlan each) {
+		return null;
 	}
 	
 }

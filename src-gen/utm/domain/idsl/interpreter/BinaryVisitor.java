@@ -1,6 +1,12 @@
 package utm.domain.idsl.interpreter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import utm.domain.idsl.model.LeafAreaPath;
 import utm.domain.idsl.model.LeafNavigationPointPath;
@@ -28,7 +34,14 @@ public interface BinaryVisitor {
 	
 	
 	
-	default CompositePath plan(PathComponent comp1, PathComponent comp2) {
+	default <T extends PathComponent, F extends PathComponent> CompositePath plan(PathComponent comp1, PathComponent comp2) {
+		Map<Pair<Class<T>, Class<F>>, BiFunction<T, F, PathComponent>> map = new HashMap<>();
+		
+		map.put(new ImmutablePair<Class<LeafNavigationPointPath>, Class<LeafNavigationPointPath>>(LeafNavigationPointPath.class, LeafNavigationPointPath.class), (c1, c2) -> {
+			return plan(c1, c2);
+		});
+		
+		
 		if (comp1 instanceof LeafNavigationPointPath && comp2 instanceof LeafNavigationPointPath) {
 			return plan((LeafNavigationPointPath) comp1, (LeafNavigationPointPath) comp2);
 		}

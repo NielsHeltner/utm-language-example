@@ -20,6 +20,7 @@ public class SuperPathPlanner implements PlannerVisitor {
 		 * }
 		 */
 		for (Planner planner : planners) {
+			planner.
 			planner.accept(this);
 		}
 	}
@@ -27,9 +28,24 @@ public class SuperPathPlanner implements PlannerVisitor {
 	@Override
 	public void visit(StraightPlan straightPlan) {
 		// TODO Auto-generated method stub
+		
 		List<Waypoint> waypoints = straightPlan.getWaypoints();
-		route.addAll(straightplanner.plan(currentPos, straightPlan.getWaypoints()));
-		currentPos = route.get(route.size() - 1);
+		IPlanner straightPlanner;
+		route.addAll(straightPlanner.plan(currentPos, waypoints, noFlyZones));
+		currentPos = route.getLast();
+		
+		
+		
+		
+		/*{
+			if (currentPos != null) {
+				Waypoint head = waypoints.get(0);
+			}
+		}*/
+		
+		
+		//route.addAll(straightplanner.plan(currentPos, straightPlan.getWaypoints()));
+		//currentPos = route.get(route.size() - 1);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package utm.idsl.metamodel2;
 
 import java.util.List;
 
-public class StraightPlan implements Planner {
+public class StraightPlan extends Planner {
 	
 	public StraightPlan(List<Waypoint> waypoints) {
 		this.waypoints = waypoints;

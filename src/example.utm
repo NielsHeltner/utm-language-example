@@ -11,8 +11,9 @@ implementation
 uses planner cover
 uses planner zigzag
 uses planner straight default
-	path += planner straight(start, point1, point2)
-	path += planner zigzag(point2, end)
+	path += planner straight(start, point1, point2, zone, zone2)
+	path += planner zigzag(zone2, zone3, zone4)
+	path += planner straight(zone4, zone5, zone6)
 
 	
 constraints

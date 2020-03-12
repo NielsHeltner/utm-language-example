@@ -4,11 +4,9 @@ import java.time.LocalDateTime;
 
 public class Time { 
 
-	private LocalDateTime time;
+	public LocalDateTime time;
 	
-	public Time(LocalDateTime time) {
-		this.time = time;
-	}
+	public Time() {}
 	
 	public LocalDateTime getTime() {
 		return time;

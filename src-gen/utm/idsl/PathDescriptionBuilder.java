@@ -46,7 +46,6 @@ public abstract class PathDescriptionBuilder {
 		return this;
 	}
 	
-	
 	public ILocation navigationPoint(NavigationPoint navigationPoint) {
 		return new NavigationPointLocation(navigationPoint);
 	}

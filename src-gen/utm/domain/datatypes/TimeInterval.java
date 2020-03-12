@@ -2,17 +2,12 @@ package utm.domain.datatypes;
 
 public class TimeInterval {
 	
-	private Time from;
-	private Time to;
-	private boolean inclusiveFrom;
-	private boolean inclusiveTo;
+	public Time from;
+	public Time to;
+	public boolean inclusiveFrom;
+	public boolean inclusiveTo;
 	
-	public TimeInterval(Time from, Time to, boolean inclusiveFrom, boolean inclusiveTo) {
-		this.from = from;
-		this.to = to;
-		this.inclusiveFrom = inclusiveFrom;
-		this.inclusiveTo = inclusiveTo;
-	}
+	public TimeInterval() {}
 	
 	public Time getFrom() {
 		return from;
@@ -22,7 +17,7 @@ public class TimeInterval {
 		return to;
 	}
 	
-	public boolean get√çnclusiveFrom() {
+	public boolean getÕnclusiveFrom() {
 		return inclusiveFrom;
 	}
 	

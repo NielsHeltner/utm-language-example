@@ -11,11 +11,17 @@ import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
+import io.javalin.plugin.openapi.annotations.OpenApiRequestBody;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
+
+import utm.domain.MissionManager;
+import utm.domain.PathPlanner;
 import utm.webservice.objects.ErrorResponse;
-import utm.webservice.controllers.MissionFieldController;
+import utm.domain.datatypes.Area;
+import utm.webservice.controllers.MissionStraight_lineController;
+import utm.webservice.controllers.MissionCover_fieldsController;
 
 public class Server {
 
@@ -29,11 +35,18 @@ public class Server {
 			path("/", () -> {
 				get(Server::getRoot);
 				path("api", () -> {
+					path("noflyzones", () -> {
+						post(Server::addNoFlyZone);
+					});
 					get(ctx -> ctx.redirect("swagger-ui"));
 					path("missions", () -> {
-						path("field", () -> {
-							get(MissionFieldController::getMissionField);
-							post(MissionFieldController::postMissionField);
+						path("straight_line", () -> {
+							get(MissionStraight_lineController::getMissionStraight_line);
+							post(MissionStraight_lineController::postMissionStraight_line);
+						});
+						path("cover_fields", () -> {
+							get(MissionCover_fieldsController::getMissionCover_fields);
+							post(MissionCover_fieldsController::postMissionCover_fields);
 						});
 					});
 				});
@@ -54,6 +67,25 @@ public class Server {
 	)
 	public static void getRoot(Context ctx) {
 		ctx.json("Hello from GET root");
+	}
+	
+	@OpenApi(
+		path = "/api/noflyzones", 
+		method = HttpMethod.POST, 
+		summary = "Summary", 
+		operationId = "addNoFlyZone", 
+		description = "Description", 
+		tags = {"NoFlyZones"}, 
+		requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Area.class)}), 
+		responses = {
+			@OpenApiResponse(status = "201"), 
+			@OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)})
+		}
+	)
+	public static void addNoFlyZone(Context ctx) {
+		Area noFlyZone = ctx.bodyAsClass(Area.class);
+		MissionManager.getInstance().onUpdateNoFlyZones(noFlyZone, new PathPlanner());
+		ctx.status(201);
 	}
 	
 	private static OpenApiPlugin getConfiguredOpenApiPlugin() {

@@ -1,30 +1,38 @@
 
-mission field:
-	when: time_interval
+mission straight_line:
 	start: navigation_point
-	point1: navigation_point
-	zone: area
-	zones: area[]
-	point2: navigation_point
 	end: navigation_point
 implementation
-uses planner cover
-uses planner zigzag
 uses planner straight default
-	path += planner straight(start, point1)
-	path += planner straight(point1, point2, zone)
+	path += planner straight(start, end)
+
+constraints
+conflicts
+
+
+mission cover_fields:
+	when: time_interval
+	start: navigation_point
+	end: navigation_point
+	areas : area[]
+implementation
+uses planner zigzag
+uses planner cover
+uses planner straight default
+	path += planner straight(start, end)
 
 	
 constraints
-	when within [08:00 ; 18:00] && !(when within [12:00 ; 13:00])
-	path within when 
+	/*
+	 * 	when within [08:00 ; 18:00] && !(when within [12:00 ; 13:00])
+	 *	path within when 
+	 */
 
 conflicts
-	!(path within zones)
-	//if otherDrone.type == fixed_wing && otherDrone.path within 1km of path
-
-
-
+	/* 
+	 * 	!(path within zones)
+	 *  //if otherDrone.type == fixed_wing && otherDrone.path within 1km of path
+	 */
 
 
 /*

@@ -1,4 +1,4 @@
-package webservice.objects;
+package utm.webservice.objects;
 
 import java.util.Map;
 

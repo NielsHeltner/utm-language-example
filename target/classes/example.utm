@@ -1,32 +1,46 @@
-mission mark:
-	hvornaar: time_interval
-	starttime: time
+
+mission straight_line:
 	start: navigation_point
-	punkt1: navigation_point
-	punkt2: navigation_point
-	slut: navigation_point
-	omraader: area
+	end: navigation_point
 implementation
-	path += start -> omraader -> punkt1 -> punkt2 -> slut with planner straight
-	path += omraader -> slut with planner straight
-	path += omraader with planner straight
+uses planner straight default
+	path += planner straight(start, end)
 
 constraints
-	hvornaar within [08:00 to 18:00] && !(hvornaar within [12:00 to 13:00])
-	path within hvornaar
+conflicts
+
+
+mission cover_fields:
+	when: time_interval
+	start: navigation_point
+	end: navigation_point
+	areas : area[]
+implementation
+uses planner zigzag
+uses planner cover
+uses planner straight default
+	path += planner straight(start, end)
+
+	
+constraints
+	/*
+	 * 	when within [08:00 ; 18:00] && !(when within [12:00 ; 13:00])
+	 *	path within when 
+	 */
 
 conflicts
-	!(path within omraader)
+	/* 
+	 * 	!(path within zones)
+	 *  //if otherDrone.type == fixed_wing && otherDrone.path within 1km of path
+	 */
 
 
-
-[13:23 to 321:432]
-[13:23 to 321:432[
-]13:23 to 321:432[
-]13:23 to 321:432]
-
-hvornaar = 2
+/*
+[13:23 ; 321:432]
+[13:23 ; 321:432[
+]13:23 ; 321:432[
+]13:23 ; 321:432]
 
 
-(123.3, 49328.45) < 87654321 && 321 within [12:32 to 54:78] || 12:43
-
+(123.3, 49328.45) < 87654321 && 321 within [12:32 ; 54:78] || 12:43
+*/

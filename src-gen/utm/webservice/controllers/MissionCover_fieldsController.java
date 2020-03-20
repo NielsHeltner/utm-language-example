@@ -10,7 +10,7 @@ import utm.webservice.objects.ErrorResponse;
 import utm.domain.missions.MissionCover_fields;
 import utm.domain.missions.path_descriptions.MissionCover_fieldsPathDescription;
 import utm.domain.MissionManager;
-import utm.domain.PathPlanner;
+import utm.domain.PathPlannerManager;
 
 public class MissionCover_fieldsController {
 	
@@ -33,7 +33,7 @@ public class MissionCover_fieldsController {
 		path = "/api/missions/cover_fields", 
 		method = HttpMethod.POST, 
 		summary = "Summary", 
-		operationId = "postMissionCover_fields", 
+		operationId = "createMissionCover_fields", 
 		description = "Description", 
 		tags = {"MissionCover_fields"}, 
 		requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = MissionCover_fields.class)}), 
@@ -42,9 +42,9 @@ public class MissionCover_fieldsController {
 			@OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)})
 		}
 	)
-	public static void postMissionCover_fields(Context ctx) {
+	public static void createMissionCover_fields(Context ctx) {
 		MissionCover_fields missionInfo = ctx.bodyAsClass(MissionCover_fields.class);
-		MissionManager.getInstance().onPostMission(new MissionCover_fieldsPathDescription(missionInfo), new PathPlanner());
+		MissionManager.getInstance().onCreateMission(new MissionCover_fieldsPathDescription(missionInfo), new PathPlannerManager());
 		ctx.status(201);
 	}
 	

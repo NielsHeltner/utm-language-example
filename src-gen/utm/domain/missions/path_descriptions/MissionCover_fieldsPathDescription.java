@@ -18,7 +18,8 @@ public class MissionCover_fieldsPathDescription extends PathDescriptionBuilder {
 	
 	@Override
 	protected void buildPathDescription() {
-		straight(navigationPoint(mission.getStart()), navigationPoint(mission.getEnd()));
+		cover(forLoop(new Variable<Area>("a"), area(mission.getAreas())));
+		straight(mission.getStart(), new VariableRef<Area>("a"));
 	}
 	
 }

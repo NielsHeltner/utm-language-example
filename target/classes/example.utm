@@ -12,14 +12,21 @@ conflicts
 
 mission cover_fields:
 	when: time_interval
+	hover_time: time
 	start: navigation_point
 	end: navigation_point
 	areas : area[]
 implementation
-uses planner zigzag
+uses planner hover
 uses planner cover
 uses planner straight default
-	path += planner straight(start, end)
+	
+	path += planner cover(for a in areas:
+		before: planner straight(start, a)
+		after: planner hover(hover_time)
+	)
+
+	//path += planner straight(start, end)
 
 	
 constraints

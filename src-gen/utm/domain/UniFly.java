@@ -27,6 +27,8 @@ public class UniFly {
 	
 	private OkHttpClient client;
 	private String accessToken;
+	private final String baseUrl = "https://healthdrone.unifly.tech";
+	private final String apiUrl = baseUrl + "/api";
 	private final MediaType GEOJSON = MediaType.parse("application/vnd.geo+json; charset=utf-8");
 	
 	public UniFly() {
@@ -35,8 +37,8 @@ public class UniFly {
 			.build();
 	}
 	
-	public void postUasoperation(List<NavigationPoint> path) {
-		JSONObject pilot = getMe();
+	public void createUasOperation(List<NavigationPoint> path) {
+		JSONObject pilot = getMyOperatorUser();
 		JSONObject mission = new JSONObject()
 				.put("type", "Feature")
 				.put("properties", new JSONObject()
@@ -65,14 +67,11 @@ public class UniFly {
 				.post(RequestBody.create(mission.toString(), GEOJSON))
 				.build();
 		
-		request(postUasoperation, (R) -> {
-			System.out.println(R.body().string());
-			return null;
-		});
+		System.out.println(request(postUasoperation, (response) -> response.body().string()));
 	}
 	
-	public void postNoFlyZone(Area noFlyZone) {
-		JSONObject pilot = getMe();
+	public void createNoFlyZone(Area noFlyZone) {
+		JSONObject pilot = getMyOperatorUser();
 		JSONObject mission = new JSONObject()
 				.put("type", "Feature")
 				.put("properties", new JSONObject()
@@ -97,26 +96,23 @@ public class UniFly {
 						.put("coordinates", new JSONArray(Arrays.asList(noFlyZone.boundingBox.stream().map((bb) -> Arrays.asList(bb.lon, bb.lat)).collect(Collectors.toList()))))
 				);
 		Request postUasoperation = new Request.Builder()
-				.url("https://healthdrone.unifly.tech/api/uasoperations")
+				.url(apiUrl + "/uasoperations")
 				.post(RequestBody.create(mission.toString(), GEOJSON))
 				.build();
 		
-		request(postUasoperation, (R) -> {
-			System.out.println(R.body().string());
-			return null;
-		});
+		System.out.println(request(postUasoperation, (response) -> response.body().string()));
 	}
 	
-	private JSONObject getMe() {
+	private JSONObject getMyOperatorUser() {
 		Request getMe = new Request.Builder()
-				.url("https://healthdrone.unifly.tech/api/operator/users/me")
+				.url(apiUrl + "/operator/users/me")
 				.build();
 		
 		return request(getMe, (response) -> new JSONObject(response.body().string()));
 	}
 	
 	private <R> R request(Request request, ResponseHandler<Response, R> callback) {
-		if (request.header("Authorization") == null) {
+		if (request.header("Authorization") == null && accessToken != null) { // add auth header if it's missing and we have an accesstoken
 			request = request.newBuilder()
 					.header("Authorization", getAccessToken())
 					.build();
@@ -148,6 +144,9 @@ public class UniFly {
 		
 		@Override
 		public Request authenticate(Route route, Response response) throws IOException {
+			if (response.request().header("Authorization") != null) {
+				return null; // give up, we've already failed to authenticate
+			}
 			String credentials = Credentials.basic("", "");
 			
 			RequestBody body = new FormBody.Builder()
@@ -157,7 +156,7 @@ public class UniFly {
 					.build();
 			
 			Request authRequest = new Request.Builder()
-					.url("https://healthdrone.unifly.tech/oauth/token")
+					.url(baseUrl + "/oauth/token")
 					.header("Authorization", credentials)
 					.header("Accept", "application/json")
 					.post(body)

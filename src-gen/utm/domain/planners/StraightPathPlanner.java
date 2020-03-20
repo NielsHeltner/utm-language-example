@@ -20,9 +20,13 @@ import utm.domain.datatypes.NavigationPoint;
 import utm.idsl.metamodel.AreaLocation;
 import utm.idsl.metamodel.NavigationPointLocation;
 
-public class StraightPathPlanner implements IPathPlanner, ILocationVisitor {
+public class StraightPathPlanner implements AbstractPathPlanner, ILocationVisitor {
 	
 	private List<Coordinate> coordinates;
+	
+	public StraightPathPlanner(PathPlannerManager context, List<ILocation> locations) {
+		super(context, locations);
+	}
 	
 	@Override
 	public List<NavigationPoint> plan(NavigationPoint currentPos, List<ILocation> locations, List<Area> noFlyZonesAsAreas) {
@@ -33,14 +37,6 @@ public class StraightPathPlanner implements IPathPlanner, ILocationVisitor {
 		coordinates = new ArrayList<>();
 		for (ILocation location : locations) {
 			location.accept(this);
-		}
-		
-		if (noFlyZones.isEmpty()) {
-			// there are no obstacles, so we can just follow the navigation points provided
-			System.out.println("Shortest path (no nfz): " + coordinates);
-			return coordinates.stream()
-					.map((coordinate) -> coordinateToNavigationPoint(coordinate))
-					.collect(Collectors.toList());
 		}
 		
 		DefaultUndirectedWeightedGraph<Coordinate, DefaultWeightedEdge> graph = initializeGraph(coordinates, noFlyZones);

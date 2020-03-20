@@ -1,25 +1,17 @@
 package utm.domain.planners;
-		
-import java.util.ArrayList;
+
 import java.util.List;
 
-import utm.domain.datatypes.Area;
-import utm.domain.datatypes.NavigationPoint;
+import utm.domain.PathPlannerManager;
 import utm.idsl.metamodel.AreaLocation;
+import utm.idsl.metamodel.ForLoop;
+import utm.idsl.metamodel.ILocation;
 import utm.idsl.metamodel.NavigationPointLocation;
 
-import utm.idsl.metamodel.ILocation;
-
-import utm.idsl.ILocationVisitor;
-import utm.domain.planners.IPathPlanner;
-
-public class CoverPathPlanner implements IPathPlanner, ILocationVisitor {
+public class CoverPathPlanner extends AbstractPathPlanner {
 	
-	private List<NavigationPoint> path = new ArrayList<>();
-	
-	@Override
-	public List<NavigationPoint> plan(NavigationPoint currentPos, List<ILocation> locations, List<Area> noFlightZones) {
-		return path;
+	public CoverPathPlanner(PathPlannerManager context, List<ILocation> locations) {
+		super(context, locations);
 	}
 	
 	@Override
@@ -31,4 +23,10 @@ public class CoverPathPlanner implements IPathPlanner, ILocationVisitor {
 	public void visit(AreaLocation areaLocation) {
 		
 	}
+	
+	@Override
+	public void visit(ForLoop forLoop) {
+		
+	}
+	
 }

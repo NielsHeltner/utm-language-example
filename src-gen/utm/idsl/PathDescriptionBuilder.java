@@ -5,6 +5,7 @@ import java.util.Arrays;
 import utm.idsl.metamodel.MetaModel;
 import utm.idsl.metamodel.AbstractPathDescription;
 import utm.idsl.metamodel.ILocation;
+import utm.idsl.metamodel.ForLoop;
 import utm.idsl.metamodel.Straight;
 import utm.idsl.metamodel.Cover;
 import utm.idsl.metamodel.NavigationPointLocation;
@@ -54,4 +55,8 @@ public abstract class PathDescriptionBuilder {
 		return new AreaLocation(area);
 	}
 	
+	
+	public ILocation forLoop(ILocation... locations) {
+		return new ForLoop(Arrays.asList(locations), null, null);
+	}
 }

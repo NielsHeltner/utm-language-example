@@ -17,7 +17,7 @@ import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 
 import utm.domain.MissionManager;
-import utm.domain.PathPlanner;
+import utm.domain.PathPlannerManager;
 import utm.webservice.objects.ErrorResponse;
 import utm.domain.datatypes.Area;
 import utm.webservice.controllers.MissionStraight_lineController;
@@ -36,17 +36,18 @@ public class Server {
 				get(Server::getRoot);
 				path("api", () -> {
 					path("noflyzones", () -> {
+						get(Server::getNoFlyZones);
 						post(Server::addNoFlyZone);
 					});
 					get(ctx -> ctx.redirect("swagger-ui"));
 					path("missions", () -> {
 						path("straight_line", () -> {
 							get(MissionStraight_lineController::getMissionStraight_line);
-							post(MissionStraight_lineController::postMissionStraight_line);
+							post(MissionStraight_lineController::createMissionStraight_line);
 						});
 						path("cover_fields", () -> {
 							get(MissionCover_fieldsController::getMissionCover_fields);
-							post(MissionCover_fieldsController::postMissionCover_fields);
+							post(MissionCover_fieldsController::createMissionCover_fields);
 						});
 					});
 				});
@@ -71,6 +72,21 @@ public class Server {
 	
 	@OpenApi(
 		path = "/api/noflyzones", 
+		method = HttpMethod.GET, 
+		summary = "Summary", 
+		operationId = "getNoFlyZones", 
+		description = "Description", 
+		tags = {"NoFlyZones"}, 
+		responses = {
+			@OpenApiResponse(status = "200", content = {@OpenApiContent(from = Area.class)})
+		}
+	)
+	public static void getNoFlyZones(Context ctx) {
+		ctx.json(MissionManager.getInstance().getNoFlyZones());
+	}
+	
+	@OpenApi(
+		path = "/api/noflyzones", 
 		method = HttpMethod.POST, 
 		summary = "Summary", 
 		operationId = "addNoFlyZone", 
@@ -84,7 +100,7 @@ public class Server {
 	)
 	public static void addNoFlyZone(Context ctx) {
 		Area noFlyZone = ctx.bodyAsClass(Area.class);
-		MissionManager.getInstance().onUpdateNoFlyZones(noFlyZone, new PathPlanner());
+		MissionManager.getInstance().onAddNoFlyZone(noFlyZone, new PathPlannerManager());
 		ctx.status(201);
 	}
 	

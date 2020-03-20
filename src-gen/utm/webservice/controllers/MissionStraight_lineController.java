@@ -10,7 +10,7 @@ import utm.webservice.objects.ErrorResponse;
 import utm.domain.missions.MissionStraight_line;
 import utm.domain.missions.path_descriptions.MissionStraight_linePathDescription;
 import utm.domain.MissionManager;
-import utm.domain.PathPlanner;
+import utm.domain.PathPlannerManager;
 
 public class MissionStraight_lineController {
 	
@@ -33,7 +33,7 @@ public class MissionStraight_lineController {
 		path = "/api/missions/straight_line", 
 		method = HttpMethod.POST, 
 		summary = "Summary", 
-		operationId = "postMissionStraight_line", 
+		operationId = "createMissionStraight_line", 
 		description = "Description", 
 		tags = {"MissionStraight_line"}, 
 		requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = MissionStraight_line.class)}), 
@@ -42,9 +42,9 @@ public class MissionStraight_lineController {
 			@OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)})
 		}
 	)
-	public static void postMissionStraight_line(Context ctx) {
+	public static void createMissionStraight_line(Context ctx) {
 		MissionStraight_line missionInfo = ctx.bodyAsClass(MissionStraight_line.class);
-		MissionManager.getInstance().onPostMission(new MissionStraight_linePathDescription(missionInfo), new PathPlanner());
+		MissionManager.getInstance().onCreateMission(new MissionStraight_linePathDescription(missionInfo), new PathPlannerManager());
 		ctx.status(201);
 	}
 	

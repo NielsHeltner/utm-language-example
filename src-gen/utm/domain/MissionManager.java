@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
+import utm.domain.action_executors.PathCollection;
 import utm.domain.datatypes.Area;
-import utm.domain.datatypes.NavigationPoint;
-
-import utm.idsl.PathDescriptionBuilder;
-import utm.idsl.metamodel.MetaModel;
+import utm.dsl.ActionBuilder;
+import utm.dsl.metamodel.MetaModel;
 
 public class MissionManager {
 	
 	private static MissionManager instance;
 	private List<Area> noFlyZones; // should probably be a Set
-	private Map<MetaModel, List<NavigationPoint>> paths;
+	private Map<MetaModel, PathCollection> paths;
 	private UniFly uniFly;
 	
 	private MissionManager() {
@@ -31,39 +31,35 @@ public class MissionManager {
   		return instance;
 	}
 	
-	private List<NavigationPoint> plan(PathPlannerManager pathPlannerManager, MetaModel pathDescription) {
-		List<NavigationPoint> path = pathPlannerManager.plan(pathDescription, noFlyZones);
-		paths.put(pathDescription, path);
-		return path;
-	}
-	
-	public void onCreateMission(PathDescriptionBuilder pathDescriptionBuilder, PathPlannerManager pathPlannerManager) {
-		MetaModel pathDescription = pathDescriptionBuilder.getPathDescriptions();
-		
-		if (pathDescription == null) {
-			// Constraints violated
+	private PathCollection execute(MetaModel actions) {
+		TreeSet<PathCollection> candidates = new TreeSet<>();
+		for (int i = 0; i < 5; i++) {
+			ActionExecutorManager actionExecutorManager = new ActionExecutorManager();
+			PathCollection pathCollection = actionExecutorManager.execute(actions, noFlyZones);
+			candidates.add(pathCollection);
 		}
 		
-		// Calculate and save path
-		List<NavigationPoint> path = plan(pathPlannerManager, pathDescription);
-		
-		uniFly.createUasOperation(path);
-		
-		// upload path to UniFly
+		PathCollection pathCollection = candidates.first();
+		paths.put(actions, pathCollection);
+		return pathCollection;
 	}
 	
-	public void onAddNoFlyZone(Area newNoFlyZone, PathPlannerManager pathPlannerManager) {
+	public void onCreateMission(ActionBuilder actionBuilder) {
+		MetaModel actions = actionBuilder.getMetaModel();
+		
+		PathCollection pathCollection = execute(actions);
+		
+		uniFly.createUasOperations(pathCollection);
+	}
+	
+	public void onAddNoFlyZone(Area newNoFlyZone, ActionExecutorManager actionExecutorManager) {
 		noFlyZones.add(newNoFlyZone);
 		uniFly.createNoFlyZone(newNoFlyZone);
-  			
-		for (Map.Entry<MetaModel, List<NavigationPoint>> entry : paths.entrySet()) {
-			List<NavigationPoint> path = plan(pathPlannerManager, entry.getKey());
+		
+		for (Map.Entry<MetaModel, PathCollection> entry : paths.entrySet()) {
+			PathCollection pathCollection = execute(entry.getKey());
 			// cancel by POST /api/uasoperations/<operationUuid>/cancellation
-			uniFly.createUasOperation(path);
-			
-			// check if new path is different from old path
-			// if it is, upload new path to UniFly and remove old path
-			// if not, don't do anything
+			uniFly.createUasOperations(pathCollection);
 		}
 	}
 	

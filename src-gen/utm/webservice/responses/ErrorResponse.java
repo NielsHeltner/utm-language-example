@@ -1,4 +1,4 @@
-package utm.webservice.objects;
+package utm.webservice.responses;
 
 import java.util.Map;
 
@@ -10,4 +10,3 @@ public class ErrorResponse {
     public Map<String, String> details;
     
 }
-

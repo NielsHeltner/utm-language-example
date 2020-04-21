@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.json.JSONArray;
@@ -21,7 +20,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.Route;
 import utm.domain.datatypes.Area;
-import utm.domain.datatypes.NavigationPoint;
+import utm.domain.action_executors.Path;
+import utm.domain.action_executors.PathCollection;
 
 public class UniFly {
 	
@@ -37,7 +37,11 @@ public class UniFly {
 			.build();
 	}
 	
-	public void createUasOperation(List<NavigationPoint> path) {
+	public void createUasOperations(PathCollection pathCollection) {
+		pathCollection.getPaths().forEach(this::createUasOperation);
+	}
+	
+	public void createUasOperation(Path path) {
 		JSONObject pilot = getMyOperatorUser();
 		JSONObject mission = new JSONObject()
 				.put("type", "Feature")
@@ -45,22 +49,22 @@ public class UniFly {
 						.put("name", "UTM DSL path")
 						.put("minHeight", 0)
 						.put("maxHeight", 100)
-						.put("startTime", Instant.now())
-						.put("endTime", Instant.now().plus(30, ChronoUnit.SECONDS))
+						.put("startTime", path.getStartTime())
+						.put("endTime", path.getEndTime())
 						.put("uas", "988af98b-03e6-402d-b017-361cb24ebbf8")
 						.put("pilotUuid", pilot.get("user"))
 						.put("lineOfSightType", "B_VLOS")
 						.put("rulesetCode", "Commercial")
 						.put("takeOffPosition", new JSONObject()
-								.put("latitude", path.get(0).lat)
-								.put("longitude", path.get(0).lon))
+								.put("latitude", path.getFirst().lat)
+								.put("longitude", path.getFirst().lon))
 						.put("landPosition", new JSONObject()
-								.put("latitude", path.get(path.size() - 1).lat)
-								.put("longitude", path.get(path.size() - 1).lon))
+								.put("latitude", path.getLast().lat)
+								.put("longitude", path.getLast().lon))
 				)
 		.put("geometry", new JSONObject()
 				.put("type", "LineString")
-				.put("coordinates", new JSONArray(path.stream().map((navigationPoint) -> Arrays.asList(navigationPoint.lon, navigationPoint.lat)).collect(Collectors.toList())))
+				.put("coordinates", new JSONArray(path.getNavigationPoints().stream().map((navigationPoint) -> Arrays.asList(navigationPoint.lon, navigationPoint.lat)).collect(Collectors.toList())))
 		);
 		Request postUasoperation = new Request.Builder()
 				.url("https://healthdrone.unifly.tech/api/uasoperations")

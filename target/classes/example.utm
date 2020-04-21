@@ -1,53 +1,31 @@
-
-mission straight_line:
+utm dynamic:
+	import action straight<location[]>
+mission basic:
 	start: navigation_point
-	end: navigation_point
+	drones: drone[]
+	a: drone
+	c: location[]
 implementation
-uses planner straight default
-	path += planner straight(start, end)
+	drones += straight(start)
+	
+	a += straight(start)
+	
+	a += straight(start)
+	for b in c using d from drones
+		for aa in c using z from drones
+			for bb in c
+				z += straight(b)
+			end
+		end
+	end
+	
+	a += straight(start)
 
 constraints
-conflicts
 
-
-mission cover_fields:
-	when: time_interval
-	hover_time: time
+mission second:
+	drones: drone[]
 	start: navigation_point
-	end: navigation_point
-	areas : area[]
-implementation
-uses planner hover
-uses planner cover
-uses planner straight default
-	
-	path += planner cover(for a in areas:
-		before: planner straight(start, a)
-		after: planner hover(hover_time)
-	)
-
-	//path += planner straight(start, end)
-
-	
-constraints
-	/*
-	 * 	when within [08:00 ; 18:00] && !(when within [12:00 ; 13:00])
-	 *	path within when 
-	 */
-
-conflicts
-	/* 
-	 * 	!(path within zones)
-	 *  //if otherDrone.type == fixed_wing && otherDrone.path within 1km of path
-	 */
-
-
-/*
-[13:23 ; 321:432]
-[13:23 ; 321:432[
-]13:23 ; 321:432[
-]13:23 ; 321:432]
-
-
-(123.3, 49328.45) < 87654321 && 321 within [12:32 ; 54:78] || 12:43
-*/
+	implementation
+	drones += straight(start)
+	constraints

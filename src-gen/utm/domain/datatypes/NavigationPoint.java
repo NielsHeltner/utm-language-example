@@ -1,18 +1,22 @@
 package utm.domain.datatypes;
 
-public class NavigationPoint {
+import utm.domain.datatypes.visitors.LocationVisitor;
+
+public class NavigationPoint implements Location {
 	
 	public double lat;
 	public double lon;
 	
 	public NavigationPoint() {}
 	
-	public double getLat() {
-		return lat;
+	public NavigationPoint(double lat, double lon) {
+		this.lat = lat;
+		this.lon = lon;
 	}
 	
-	public double getLon() {
-		return lon;
+	@Override
+	public void accept(LocationVisitor locationVisitor) {
+		locationVisitor.visit(this);
 	}
 	
 	@Override
@@ -21,4 +25,3 @@ public class NavigationPoint {
 	}
 	
 }
-

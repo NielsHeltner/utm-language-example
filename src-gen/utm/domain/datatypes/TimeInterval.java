@@ -4,26 +4,14 @@ public class TimeInterval {
 	
 	public Time from;
 	public Time to;
-	public boolean inclusiveFrom;
-	public boolean inclusiveTo;
 	
-	public TimeInterval() {}
-	
-	public Time getFrom() {
-		return from;
+	public boolean isWithin(Time time) {
+		return from.compareTo(time) < 1 && to.compareTo(time) > -1;
 	}
 	
-	public Time getTo() {
-		return to;
-	}
-	
-	public boolean getÍnclusiveFrom() {
-		return inclusiveFrom;
-	}
-	
-	public boolean getInclusiveTo() {
-		return inclusiveTo;
+	@Override
+	public String toString() {
+		return "[" + from + "; " + to + "]";
 	}
 	
 }
-

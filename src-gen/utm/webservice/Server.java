@@ -4,49 +4,63 @@ import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.plugin.json.JavalinJackson;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
-import io.javalin.plugin.openapi.annotations.OpenApiRequestBody;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
+import utm.domain.datatypes.Location;
+import utm.webservice.objectmapper.LocationObjectMapper;
 
-import utm.domain.MissionManager;
-import utm.domain.PathPlanner;
-import utm.webservice.objects.ErrorResponse;
-import utm.domain.datatypes.Area;
-import utm.webservice.controllers.MissionStraight_lineController;
-import utm.webservice.controllers.MissionCover_fieldsController;
+import utm.webservice.controllers.OperationBasicController;
+import utm.webservice.controllers.OperationSecondController;
+import utm.webservice.controllers.NoFlyZonesController;
+import utm.webservice.responses.ErrorResponse;
 
 public class Server {
-
+	
 	public static void main(String[] args) {
+		Server.launch();
+	}
+	
+	public static void launch() {
         Javalin.create(config -> {
         	config.registerPlugin(getConfiguredOpenApiPlugin());
         	config.defaultContentType = "application/json";
         	config.enableCorsForAllOrigins();
         	config.enableDevLogging();
+        	
+			SimpleModule module = new SimpleModule();
+			module.addDeserializer(Location.class, new LocationObjectMapper());
+			JavalinJackson.getObjectMapper().registerModule(module);
         }).routes(() -> {
 			path("/", () -> {
 				get(Server::getRoot);
 				path("api", () -> {
-					path("noflyzones", () -> {
-						post(Server::addNoFlyZone);
-					});
 					get(ctx -> ctx.redirect("swagger-ui"));
-					path("missions", () -> {
-						path("straight_line", () -> {
-							get(MissionStraight_lineController::getMissionStraight_line);
-							post(MissionStraight_lineController::postMissionStraight_line);
+					path("noflyzones", () -> {
+						get(NoFlyZonesController::getNoFlyZones);
+						post(NoFlyZonesController::addNoFlyZone);
+					});
+					path("operations", () -> {
+						path("basic", () -> {
+							get(OperationBasicController::getOperationBasic);
+							post(OperationBasicController::createOperationBasic);
 						});
-						path("cover_fields", () -> {
-							get(MissionCover_fieldsController::getMissionCover_fields);
-							post(MissionCover_fieldsController::postMissionCover_fields);
+						path("second", () -> {
+							get(OperationSecondController::getOperationSecond);
+							post(OperationSecondController::createOperationSecond);
 						});
 					});
 				});
@@ -66,26 +80,16 @@ public class Server {
 		}
 	)
 	public static void getRoot(Context ctx) {
-		ctx.json("Hello from GET root");
-	}
-	
-	@OpenApi(
-		path = "/api/noflyzones", 
-		method = HttpMethod.POST, 
-		summary = "Summary", 
-		operationId = "addNoFlyZone", 
-		description = "Description", 
-		tags = {"NoFlyZones"}, 
-		requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = Area.class)}), 
-		responses = {
-			@OpenApiResponse(status = "201"), 
-			@OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)})
-		}
-	)
-	public static void addNoFlyZone(Context ctx) {
-		Area noFlyZone = ctx.bodyAsClass(Area.class);
-		MissionManager.getInstance().onUpdateNoFlyZones(noFlyZone, new PathPlanner());
-		ctx.status(201);
+		ctx.json(new JSONObject()
+				.put("links", new JSONArray()
+					.put("/swagger-docs")
+					.put("/swagger-ui")
+					.put("/api")
+					.put("/api/noflyzones")
+					.put("/api/operations")
+					.put("/api/operations/basic")
+					.put("/api/operations/second")
+				).toMap());
 	}
 	
 	private static OpenApiPlugin getConfiguredOpenApiPlugin() {
@@ -100,6 +104,5 @@ public class Server {
                 });
         return new OpenApiPlugin(options);
     }
-
+    
 }
-

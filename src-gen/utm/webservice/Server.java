@@ -23,8 +23,8 @@ import io.swagger.v3.oas.models.info.Info;
 import utm.domain.datatypes.Location;
 import utm.webservice.objectmapper.LocationObjectMapper;
 
-import utm.webservice.controllers.MissionBasicController;
-import utm.webservice.controllers.MissionSecondController;
+import utm.webservice.controllers.OperationBasicController;
+import utm.webservice.controllers.OperationSecondController;
 import utm.webservice.controllers.NoFlyZonesController;
 import utm.webservice.responses.ErrorResponse;
 
@@ -40,7 +40,7 @@ public class Server {
         	config.defaultContentType = "application/json";
         	config.enableCorsForAllOrigins();
         	config.enableDevLogging();
-
+        	
 			SimpleModule module = new SimpleModule();
 			module.addDeserializer(Location.class, new LocationObjectMapper());
 			JavalinJackson.getObjectMapper().registerModule(module);
@@ -53,14 +53,14 @@ public class Server {
 						get(NoFlyZonesController::getNoFlyZones);
 						post(NoFlyZonesController::addNoFlyZone);
 					});
-					path("missions", () -> {
+					path("operations", () -> {
 						path("basic", () -> {
-							get(MissionBasicController::getMissionBasic);
-							post(MissionBasicController::createMissionBasic);
+							get(OperationBasicController::getOperationBasic);
+							post(OperationBasicController::createOperationBasic);
 						});
 						path("second", () -> {
-							get(MissionSecondController::getMissionSecond);
-							post(MissionSecondController::createMissionSecond);
+							get(OperationSecondController::getOperationSecond);
+							post(OperationSecondController::createOperationSecond);
 						});
 					});
 				});
@@ -86,9 +86,9 @@ public class Server {
 					.put("/swagger-ui")
 					.put("/api")
 					.put("/api/noflyzones")
-					.put("/api/missions")
-					.put("/api/missions/basic")
-					.put("/api/missions/second")
+					.put("/api/operations")
+					.put("/api/operations/basic")
+					.put("/api/operations/second")
 				).toMap());
 	}
 	

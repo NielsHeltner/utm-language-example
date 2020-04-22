@@ -20,9 +20,9 @@ import utm.domain.action_executors.PathCollection;
 import utm.dsl.metamodel.Straight;
 import utm.domain.action_executors.StraightExecutor;
 import utm.dsl.ActionVisitor;
-import utm.dsl.metamodel.ForLoopIteration;
 import utm.dsl.metamodel.MetaModel;
 import utm.dsl.metamodel.ActionCollection;
+import utm.dsl.metamodel.ForLoopIteration;
 import utm.dsl.metamodel.ParallelForLoop;
 
 public class ActionExecutorManager implements ActionVisitor {
@@ -101,12 +101,6 @@ public class ActionExecutorManager implements ActionVisitor {
 				.collect(Collectors.toList());*/
 	}
 	
-	private void resolveDrones(List<Drone> droneSubset, List<ForLoopIteration> iterations) {
-		Iterator<Drone> droneSubsetIterator = Iterables.cycle(droneSubset).iterator();
-		
-		iterations.forEach(iteration -> resolvedDrones.put(iteration.getUnresolvedDrone(), droneSubsetIterator.next()));
-	}
-	
 	@Override
 	public void visit(Straight straight) {
 		List<Path> paths = getPaths(straight.getDrones());
@@ -127,6 +121,12 @@ public class ActionExecutorManager implements ActionVisitor {
 		}
 		
 		parallelForLoop.getIterations().forEach(iteration -> visitAll(iteration.getActionCollection()));
+	}
+	
+	private void resolveDrones(List<Drone> droneSubset, List<ForLoopIteration> iterations) {
+		Iterator<Drone> droneSubsetIterator = Iterables.cycle(droneSubset).iterator();
+		
+		iterations.forEach(iteration -> resolvedDrones.put(iteration.getUnresolvedDrone(), droneSubsetIterator.next()));
 	}
 	
 }

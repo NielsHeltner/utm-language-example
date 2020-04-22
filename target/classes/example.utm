@@ -1,6 +1,6 @@
 utm dynamic:
 	import action straight<location[]>
-mission basic:
+operation basic:
 	start: navigation_point
 	drones: drone[]
 	a: drone
@@ -9,23 +9,16 @@ implementation
 	drones += straight(start)
 	
 	a += straight(start)
-	
-	a += straight(start)
 	for b in c using d from drones
 		for aa in c using z from drones
-			for bb in c
-				z += straight(b)
-			end
+			d += straight(b)
+			z += straight(aa)
 		end
 	end
-	
-	a += straight(start)
 
-constraints
 
-mission second:
+operation second:
 	drones: drone[]
 	start: navigation_point
 	implementation
-	drones += straight(start)
-	constraints
+		drones += straight(start)

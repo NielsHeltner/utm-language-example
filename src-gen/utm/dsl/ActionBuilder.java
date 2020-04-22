@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 import utm.domain.datatypes.Drone;
 import utm.domain.datatypes.Location;
 import utm.dsl.metamodel.AbstractAction;
-import utm.dsl.metamodel.ForLoopIteration;
 import utm.dsl.metamodel.MetaModel;
 import utm.dsl.metamodel.ActionCollection;
 import utm.dsl.metamodel.Straight;
-import utm.dsl.metamodel.ParallelForLoop;
 import utm.dsl.metamodel.UnresolvedDrone;
+import utm.dsl.metamodel.ForLoopIteration;
+import utm.dsl.metamodel.ParallelForLoop;
 
 public abstract class ActionBuilder {
 	
@@ -84,8 +84,8 @@ public abstract class ActionBuilder {
 	}
 	
 	private <T> List<ForLoopIteration> buildIterations(List<T> arguments, TriConsumer<ActionBuilder, T, Drone> body) {
-		UnresolvedDrone unresolvedDrone = new UnresolvedDrone();
 		return arguments.stream().map(argument -> {
+			UnresolvedDrone unresolvedDrone = new UnresolvedDrone();
 			ActionBuilder iterationBuilder = new ActionBuilder() {
 				@Override
 				protected void buildActions() {

@@ -43,7 +43,7 @@ public class UniFly {
 	
 	public void createUasOperation(Path path) {
 		JSONObject pilot = getMyOperatorUser();
-		JSONObject mission = new JSONObject()
+		JSONObject operation = new JSONObject()
 				.put("type", "Feature")
 				.put("properties", new JSONObject()
 						.put("name", "UTM DSL path")
@@ -68,7 +68,7 @@ public class UniFly {
 		);
 		Request postUasoperation = new Request.Builder()
 				.url("https://healthdrone.unifly.tech/api/uasoperations")
-				.post(RequestBody.create(mission.toString(), GEOJSON))
+				.post(RequestBody.create(operation.toString(), GEOJSON))
 				.build();
 		
 		System.out.println(request(postUasoperation, (response) -> response.body().string()));
@@ -76,7 +76,7 @@ public class UniFly {
 	
 	public void createNoFlyZone(Area noFlyZone) {
 		JSONObject pilot = getMyOperatorUser();
-		JSONObject mission = new JSONObject()
+		JSONObject operation = new JSONObject()
 				.put("type", "Feature")
 				.put("properties", new JSONObject()
 						.put("name", "UTM DSL no fly zone")
@@ -101,7 +101,7 @@ public class UniFly {
 				);
 		Request postUasoperation = new Request.Builder()
 				.url(apiUrl + "/uasoperations")
-				.post(RequestBody.create(mission.toString(), GEOJSON))
+				.post(RequestBody.create(operation.toString(), GEOJSON))
 				.build();
 		
 		System.out.println(request(postUasoperation, (response) -> response.body().string()));

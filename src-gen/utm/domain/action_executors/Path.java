@@ -33,6 +33,9 @@ public class Path implements Comparable<Path> {
 	}
 	
 	public NavigationPoint getLast() {
+		if (trajectory.isEmpty()) {
+			return null;
+		}
 		return trajectory.get(trajectory.size() - 1).getKey();
 	}
 	
@@ -63,6 +66,11 @@ public class Path implements Comparable<Path> {
 	@Override
 	public int compareTo(Path other) {
 		return getTotalDuration().compareTo(other.getTotalDuration());
+	}
+	
+	@Override
+	public String toString() {
+		return "Drone: " + drone + " : " + trajectory.toString();
 	}
 	
 }

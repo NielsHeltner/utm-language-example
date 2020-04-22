@@ -6,7 +6,7 @@ import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiRequestBody;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
-import utm.domain.MissionManager;
+import utm.domain.OperationManager;
 import utm.domain.ActionExecutorManager;
 import utm.domain.datatypes.Area;
 import utm.webservice.responses.ErrorResponse;
@@ -25,7 +25,7 @@ public class NoFlyZonesController {
 		}
 	)
 	public static void getNoFlyZones(Context ctx) {
-		ctx.json(MissionManager.getInstance().getNoFlyZones());
+		ctx.json(OperationManager.getInstance().getNoFlyZones());
 	}
 	
 	@OpenApi(
@@ -43,7 +43,7 @@ public class NoFlyZonesController {
 	)
 	public static void addNoFlyZone(Context ctx) {
 		Area noFlyZone = ctx.bodyAsClass(Area.class);
-		MissionManager.getInstance().onAddNoFlyZone(noFlyZone, new ActionExecutorManager());
+		OperationManager.getInstance().onAddNoFlyZone(noFlyZone, new ActionExecutorManager());
 		ctx.status(201);
 	}
 	

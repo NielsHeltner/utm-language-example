@@ -42,7 +42,7 @@ public class StraightExecutor extends AbstractActionExecutor implements Location
 			graph = initializeGraph(noFlyZonesAsPolygons);
 			
 			coordinates = new ArrayList<>(straight.getLocations().size() + 1);
-			if (path.getLast() != null) {
+			if (path.getLast() != null && !path.getLast().equals(straight.getLocations().get(0))) {
 				path.getLast().accept(this);
 			}
 			straight.getLocations().forEach(location -> location.accept(this));
@@ -50,14 +50,16 @@ public class StraightExecutor extends AbstractActionExecutor implements Location
 			graph = createVisibilityGraph(graph, noFlyZonesAsPolygons);
 			
 			List<Coordinate> shortestPath = new ArrayList<>();
-			coordinates.stream().reduce((current, next) -> {
+			coordinates.stream().reduce(coordinates.get(0), (current, next) -> {
 				shortestPath.addAll(getShortestPath(graph, current, next));
 				return next;
 			});
 			System.out.println("Shortest path: " + shortestPath);
 			
 			shortestPath.stream().reduce(shortestPath.get(0), (current, next) -> {
-				path.add(coordinateToNavigationPoint(next), getTimeBetween(current, next));
+				if (!coordinateToNavigationPoint(next).equals(path.getLast())) {
+					path.add(coordinateToNavigationPoint(next), getTimeBetween(current, next));
+				}
 				return next;
 			});
 		}

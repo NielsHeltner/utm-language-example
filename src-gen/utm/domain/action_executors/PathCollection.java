@@ -46,4 +46,9 @@ public class PathCollection implements Comparable<PathCollection> {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return paths.toString();
+	}
+	
 }

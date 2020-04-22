@@ -6,45 +6,45 @@ import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiRequestBody;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
-import utm.domain.MissionManager;
-import utm.domain.missions.MissionSecond;
-import utm.domain.missions.templates.MissionSecondTemplate;
+import utm.domain.OperationManager;
+import utm.domain.operations.OperationBasic;
+import utm.domain.operations.templates.OperationBasicTemplate;
 import utm.domain.UtmDynamic;
 import utm.webservice.responses.ErrorResponse;
 
-public class MissionSecondController {
+public class OperationBasicController {
 	
 	@OpenApi(
-		path = "/api/missions/second", 
+		path = "/api/operations/basic", 
 		method = HttpMethod.GET, 
 		summary = "Summary", 
-		operationId = "getMissionSecond", 
+		operationId = "getOperationBasic", 
 		description = "Description", 
-		tags = {"MissionSecond"}, 
+		tags = {"OperationBasic"}, 
 		responses = {
 			@OpenApiResponse(status = "200", content = {@OpenApiContent(from = String.class)})
 		}
 	)
-	public static void getMissionSecond(Context ctx) {
+	public static void getOperationBasic(Context ctx) {
 		ctx.status(200);
 	}
 	
 	@OpenApi(
-		path = "/api/missions/second", 
+		path = "/api/operations/basic", 
 		method = HttpMethod.POST, 
 		summary = "Summary", 
-		operationId = "createMissionSecond", 
+		operationId = "createOperationBasic", 
 		description = "Description", 
-		tags = {"MissionSecond"}, 
-		requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = MissionSecond.class)}), 
+		tags = {"OperationBasic"}, 
+		requestBody = @OpenApiRequestBody(content = {@OpenApiContent(from = OperationBasic.class)}), 
 		responses = {
 			@OpenApiResponse(status = "201"), 
 			@OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)})
 		}
 	)
-	public static void createMissionSecond(Context ctx) {
-		MissionSecond missionInfo = ctx.bodyValidator(MissionSecond.class).get();
-		MissionManager.getInstance().onCreateMission(new MissionSecondTemplate(UtmDynamic.getInstance(), missionInfo));
+	public static void createOperationBasic(Context ctx) {
+		OperationBasic operationInfo = ctx.bodyValidator(OperationBasic.class).get();
+		OperationManager.getInstance().onCreateOperation(new OperationBasicTemplate(UtmDynamic.getInstance(), operationInfo));
 		ctx.status(201);
 	}
 	

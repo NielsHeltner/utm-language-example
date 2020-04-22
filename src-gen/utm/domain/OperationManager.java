@@ -11,22 +11,22 @@ import utm.domain.datatypes.Area;
 import utm.dsl.ActionBuilder;
 import utm.dsl.metamodel.MetaModel;
 
-public class MissionManager {
+public class OperationManager {
 	
-	private static MissionManager instance;
+	private static OperationManager instance;
 	private List<Area> noFlyZones; // should probably be a Set
 	private Map<MetaModel, PathCollection> paths;
 	private UniFly uniFly;
 	
-	private MissionManager() {
+	private OperationManager() {
 		noFlyZones = new ArrayList<>();
 		paths = new HashMap<>();
 		uniFly = new UniFly();
 	}
 	
-	public static MissionManager getInstance() {
+	public static OperationManager getInstance() {
 		if (instance == null) {
-  			instance = new MissionManager();
+  			instance = new OperationManager();
   		}
   		return instance;
 	}
@@ -44,7 +44,7 @@ public class MissionManager {
 		return pathCollection;
 	}
 	
-	public void onCreateMission(ActionBuilder actionBuilder) {
+	public void onCreateOperation(ActionBuilder actionBuilder) {
 		MetaModel actions = actionBuilder.getMetaModel();
 		
 		PathCollection pathCollection = execute(actions);

@@ -23,8 +23,8 @@ import io.swagger.v3.oas.models.info.Info;
 import utm.domain.datatypes.Location;
 import utm.webservice.objectmapper.LocationObjectMapper;
 
+import utm.webservice.controllers.OperationTestController;
 import utm.webservice.controllers.OperationBasicController;
-import utm.webservice.controllers.OperationSecondController;
 import utm.webservice.controllers.NoFlyZonesController;
 import utm.webservice.responses.ErrorResponse;
 
@@ -54,13 +54,13 @@ public class Server {
 						post(NoFlyZonesController::addNoFlyZone);
 					});
 					path("operations", () -> {
+						path("test", () -> {
+							get(OperationTestController::getOperationTest);
+							post(OperationTestController::createOperationTest);
+						});
 						path("basic", () -> {
 							get(OperationBasicController::getOperationBasic);
 							post(OperationBasicController::createOperationBasic);
-						});
-						path("second", () -> {
-							get(OperationSecondController::getOperationSecond);
-							post(OperationSecondController::createOperationSecond);
 						});
 					});
 				});
@@ -87,8 +87,8 @@ public class Server {
 					.put("/api")
 					.put("/api/noflyzones")
 					.put("/api/operations")
+					.put("/api/operations/test")
 					.put("/api/operations/basic")
-					.put("/api/operations/second")
 				).toMap());
 	}
 	

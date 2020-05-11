@@ -1,5 +1,6 @@
 package utm.webservice.controllers;
 
+import java.io.IOException;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
@@ -42,7 +43,7 @@ public class OperationBasicController {
 			@OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)})
 		}
 	)
-	public static void createOperationBasic(Context ctx) {
+	public static void createOperationBasic(Context ctx) throws IOException {
 		OperationBasic operationInfo = ctx.bodyValidator(OperationBasic.class).get();
 		OperationManager.getInstance().onCreateOperation(new OperationBasicTemplate(UtmDynamic.getInstance(), operationInfo));
 		ctx.status(201);

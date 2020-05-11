@@ -1,5 +1,6 @@
 package utm.webservice.controllers;
-		
+
+import java.io.IOException;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
@@ -41,7 +42,7 @@ public class NoFlyZonesController {
 			@OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)})
 		}
 	)
-	public static void addNoFlyZone(Context ctx) {
+	public static void addNoFlyZone(Context ctx) throws IOException {
 		Area noFlyZone = ctx.bodyAsClass(Area.class);
 		OperationManager.getInstance().onAddNoFlyZone(noFlyZone, new ActionExecutorManager());
 		ctx.status(201);

@@ -1,5 +1,6 @@
 package utm.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +17,12 @@ public class OperationManager {
 	private static OperationManager instance;
 	private List<Area> noFlyZones; // should probably be a Set
 	private Map<MetaModel, PathCollection> paths;
-	private UniFly uniFly;
+	private Unifly unifly;
 	
 	private OperationManager() {
 		noFlyZones = new ArrayList<>();
 		paths = new HashMap<>();
-		uniFly = new UniFly();
+		unifly = new Unifly();
 	}
 	
 	public static OperationManager getInstance() {
@@ -44,22 +45,22 @@ public class OperationManager {
 		return pathCollection;
 	}
 	
-	public void onCreateOperation(ActionBuilder actionBuilder) {
+	public void onCreateOperation(ActionBuilder actionBuilder) throws IOException {
 		MetaModel actions = actionBuilder.getMetaModel();
 		
 		PathCollection pathCollection = execute(actions);
 		
-		uniFly.createUasOperations(pathCollection);
+		unifly.createUasOperations(pathCollection);
 	}
 	
-	public void onAddNoFlyZone(Area newNoFlyZone, ActionExecutorManager actionExecutorManager) {
+	public void onAddNoFlyZone(Area newNoFlyZone, ActionExecutorManager actionExecutorManager) throws IOException {
 		noFlyZones.add(newNoFlyZone);
-		uniFly.createNoFlyZone(newNoFlyZone);
+		unifly.createNoFlyZone(newNoFlyZone);
 		
 		for (Map.Entry<MetaModel, PathCollection> entry : paths.entrySet()) {
 			PathCollection pathCollection = execute(entry.getKey());
 			// cancel by POST /api/uasoperations/<operationUuid>/cancellation
-			uniFly.createUasOperations(pathCollection);
+			unifly.createUasOperations(pathCollection);
 		}
 	}
 	

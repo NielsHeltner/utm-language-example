@@ -16,14 +16,8 @@ public class OperationBasicTemplate extends ActionBuilder {
 	
 	@Override
 	protected void buildActions() {
-		drone(operation.drones).straight(operation.start).
-		drone(operation.a).straight(operation.start).
-		parallelForLoop(operation.c, operation.drones, (body0, b, d) -> {
-			body0.parallelForLoop(operation.c, operation.drones, (body1, aa, z) -> {
-				body1.drone(d).straight(b).
-				drone(z).straight(aa);
-			});
-		});
+		drone(operation.uas).straight(operation.start, operation.goal).
+		drone(operation.uas).straight(operation.start).straight(operation.goal);
 	}
 	
 }

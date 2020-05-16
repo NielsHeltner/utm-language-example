@@ -3,23 +3,23 @@ package utm.dsl.metamodel;
 public class ForLoopIteration {
 	
 	private UnresolvedDrone unresolvedDrone;
-	private ActionCollection actionCollection;
+	private ActionCollection body;
 	
-	public ForLoopIteration(UnresolvedDrone unresolvedDrone, ActionCollection actionCollection) {
+	public ForLoopIteration(UnresolvedDrone unresolvedDrone, ActionCollection body) {
 		this.unresolvedDrone = unresolvedDrone;
-		this.actionCollection = actionCollection;
+		this.body = body;
 	}
 	
-	public ForLoopIteration(ActionCollection actionCollection) {
-		this(null, actionCollection);
+	public ForLoopIteration(ActionCollection body) {
+		this(null, body);
 	}
 	
 	public UnresolvedDrone getUnresolvedDrone() {
 		return unresolvedDrone;
 	}
 	
-	public ActionCollection getActionCollection() {
-		return actionCollection;
+	public ActionCollection getBody() {
+		return body;
 	}
 	
 }

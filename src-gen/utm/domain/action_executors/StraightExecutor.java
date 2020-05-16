@@ -42,6 +42,11 @@ public class StraightExecutor extends AbstractActionExecutor implements Location
 			graph = initializeGraph(noFlyZonesAsPolygons);
 			
 			coordinates = new ArrayList<>(straight.getLocations().size() + 1);
+			
+			if (path.isEmpty()) {
+				path.getDrone().takeOffPosition.accept(this);
+			}
+			
 			if (path.getLast() != null && !path.getLast().equals(straight.getLocations().get(0))) {
 				path.getLast().accept(this);
 			}

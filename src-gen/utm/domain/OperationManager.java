@@ -10,13 +10,13 @@ import java.util.TreeSet;
 import utm.domain.action_executors.PathCollection;
 import utm.domain.datatypes.Area;
 import utm.dsl.ActionBuilder;
-import utm.dsl.metamodel.MetaModel;
+import utm.dsl.metamodel.OperationTemplate;
 
 public class OperationManager {
 	
 	private static OperationManager instance;
 	private List<Area> noFlyZones; // should probably be a Set
-	private Map<MetaModel, PathCollection> paths;
+	private Map<OperationTemplate, PathCollection> paths;
 	private Unifly unifly;
 	
 	private OperationManager() {
@@ -32,23 +32,23 @@ public class OperationManager {
   		return instance;
 	}
 	
-	private PathCollection execute(MetaModel actions) {
+	private PathCollection execute(OperationTemplate operation) {
 		TreeSet<PathCollection> candidates = new TreeSet<>();
 		for (int i = 0; i < 5; i++) {
 			ActionExecutorManager actionExecutorManager = new ActionExecutorManager();
-			PathCollection pathCollection = actionExecutorManager.execute(actions, noFlyZones);
+			PathCollection pathCollection = actionExecutorManager.execute(operation, noFlyZones);
 			candidates.add(pathCollection);
 		}
 		
 		PathCollection pathCollection = candidates.first();
-		paths.put(actions, pathCollection);
+		paths.put(operation, pathCollection);
 		return pathCollection;
 	}
 	
 	public void onCreateOperation(ActionBuilder actionBuilder) throws IOException {
-		MetaModel actions = actionBuilder.getMetaModel();
+		OperationTemplate operation = actionBuilder.getOperationTemplate();
 		
-		PathCollection pathCollection = execute(actions);
+		PathCollection pathCollection = execute(operation);
 		
 		unifly.createUasOperations(pathCollection);
 	}
@@ -57,7 +57,7 @@ public class OperationManager {
 		noFlyZones.add(newNoFlyZone);
 		unifly.createNoFlyZone(newNoFlyZone);
 		
-		for (Map.Entry<MetaModel, PathCollection> entry : paths.entrySet()) {
+		for (Map.Entry<OperationTemplate, PathCollection> entry : paths.entrySet()) {
 			PathCollection pathCollection = execute(entry.getKey());
 			// cancel by POST /api/uasoperations/<operationUuid>/cancellation
 			unifly.createUasOperations(pathCollection);

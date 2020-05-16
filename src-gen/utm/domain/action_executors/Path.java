@@ -63,6 +63,10 @@ public class Path implements Comparable<Path> {
 		return drone;
 	}
 	
+	public boolean isEmpty() {
+		return getNavigationPoints().isEmpty();
+	}
+	
 	@Override
 	public int compareTo(Path other) {
 		return getTotalDuration().compareTo(other.getTotalDuration());

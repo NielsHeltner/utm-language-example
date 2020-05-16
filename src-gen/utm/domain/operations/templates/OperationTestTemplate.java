@@ -19,10 +19,10 @@ public class OperationTestTemplate extends ActionBuilder {
 		drone(operation.drones).straight(array(operation.start)).
 		drone(operation.drones).straight(operation.start).
 		drone(operation.a).straight(operation.start).
-		parallelForLoop(array(operation.point, operation.point), operation.drones, (body, variable, drone_variable) -> {
+		sequentialForLoop(array(operation.point, operation.point), operation.drones, (body, variable, drone_variable) -> {
 			body.drone(drone_variable).straight(variable);
 		}).
-		parallelForLoop(operation.drones, (body, d) -> {
+		prioritizedForLoop(operation.drones, (body, d) -> {
 			body.drone(d).straight(operation.locations);
 		}).
 		parallelForLoop(operation.locations, operation.drones, (body0, i, x) -> {

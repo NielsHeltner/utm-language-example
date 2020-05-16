@@ -13,24 +13,23 @@ import com.google.common.collect.Iterables;
 
 import utm.domain.datatypes.Area;
 import utm.domain.datatypes.Drone;
-import utm.domain.datatypes.NavigationPoint;
 import utm.domain.datatypes.Time;
 import utm.domain.action_executors.Path;
 import utm.domain.action_executors.PathCollection;
 import utm.dsl.metamodel.Straight;
 import utm.domain.action_executors.StraightExecutor;
 import utm.dsl.ActionVisitor;
-import utm.dsl.metamodel.MetaModel;
+import utm.dsl.metamodel.OperationTemplate;
 import utm.dsl.metamodel.ActionCollection;
 import utm.dsl.metamodel.ForLoopIteration;
+import utm.dsl.metamodel.SequentialForLoop;
+import utm.dsl.metamodel.PrioritizedForLoop;
 import utm.dsl.metamodel.ParallelForLoop;
 
 public class ActionExecutorManager implements ActionVisitor {
 	
 	private Map<Drone, Path> paths;
-	private NavigationPoint currentPosition; // should be moved to Path
-	private Time startTime; // should probably be moved to path (maybe kept here to "synchronize" paths upon instantiation)
-	private Time currentTime; // same as above
+	private Time startTime; // to "synchronize" paths upon instantiation
 	private DroneManager droneManager;
 	private Map<Drone, Drone> resolvedDrones;
 	
@@ -42,12 +41,11 @@ public class ActionExecutorManager implements ActionVisitor {
 		this.droneManager = new DroneManager();
 	}
 	
-	public PathCollection execute(MetaModel metaModel, List<Area> noFlyZones) {
+	public PathCollection execute(OperationTemplate operation, List<Area> noFlyZones) {
 		this.noFlyZones = noFlyZones;
 		startTime = getRandomStartTime();
-		currentTime = startTime;
 		
-		visitAll(metaModel.getActionCollection());
+		visitAll(operation.getImplementation());
 		
 		return new PathCollection(new ArrayList<>(paths.values()));
 	}
@@ -61,26 +59,14 @@ public class ActionExecutorManager implements ActionVisitor {
 		visitees.getActions().forEach(action -> action.accept(this));
 	}
 	
-	public NavigationPoint getCurrentPosition() {
-		return currentPosition;
-	}
-	
 	public Drone getMappedDrone(Drone drone) {
 		return resolvedDrones.getOrDefault(drone, drone);
-	}
-	
-	public Path getPath() {
-		return null;
 	}
 	
 	public Time getStartTime() {
 		return startTime;
 	}
 	
-	public Time getCurrentTime() {
-		return currentTime;
-	}
-		
 	public List<Area> getNoFlyZones() {
 		return Collections.unmodifiableList(noFlyZones);
 	}
@@ -90,15 +76,6 @@ public class ActionExecutorManager implements ActionVisitor {
 				.map(this::getMappedDrone)
 				.map(drone -> paths.computeIfAbsent(drone, droneKey -> new Path(droneKey, startTime)))
 				.collect(Collectors.toList());
-		
-		/*return drones.stream()
-				.map(this::getMappedDrone)
-				.map(drone -> {
-					paths.putIfAbsent(drone, new Path(drone, startTime));
-					return drone;
-				})
-				.map(paths::get)
-				.collect(Collectors.toList());*/
 	}
 	
 	@Override
@@ -109,10 +86,27 @@ public class ActionExecutorManager implements ActionVisitor {
 	}
 	
 	@Override
-	public <T> void visit(ParallelForLoop<T> parallelForLoop) {
-		// do forloop (should probably not be generated in a loop)
-		// Implemented for Parallel
+	public <T> void visit(SequentialForLoop<T> sequentialForLoop) {
+		if (sequentialForLoop.getDrones() != null) {
+			List<Drone> droneSubset = droneManager.getAvailableDrones(sequentialForLoop.getDrones(), startTime, 1);		
+			resolveDrones(droneSubset, sequentialForLoop.getIterations());
+		}
 		
+		sequentialForLoop.getIterations().forEach(iteration -> visitAll(iteration.getBody()));
+	}
+	
+	@Override
+	public <T> void visit(PrioritizedForLoop<T> prioritizedForLoop) {
+		if (prioritizedForLoop.getDrones() != null) {
+			List<Drone> droneSubset = droneManager.getAvailableDrones(prioritizedForLoop.getDrones(), startTime, prioritizedForLoop.getArguments().size());		
+			resolveDrones(droneSubset, prioritizedForLoop.getIterations());
+		}
+		
+		prioritizedForLoop.getIterations().forEach(iteration -> visitAll(iteration.getBody()));
+	}
+	
+	@Override
+	public <T> void visit(ParallelForLoop<T> parallelForLoop) {
 		Collections.shuffle(parallelForLoop.getIterations());
 		
 		if (parallelForLoop.getDrones() != null) {
@@ -120,7 +114,7 @@ public class ActionExecutorManager implements ActionVisitor {
 			resolveDrones(droneSubset, parallelForLoop.getIterations());
 		}
 		
-		parallelForLoop.getIterations().forEach(iteration -> visitAll(iteration.getActionCollection()));
+		parallelForLoop.getIterations().forEach(iteration -> visitAll(iteration.getBody()));
 	}
 	
 	private void resolveDrones(List<Drone> droneSubset, List<ForLoopIteration> iterations) {

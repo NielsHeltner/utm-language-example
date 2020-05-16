@@ -13,11 +13,11 @@ utm dynamic:
 			
 			a += straight(start)
 			
-			for variable in [point, point] using drone_variable from drones
+			sequential for variable in [point, point] using drone_variable from drones
 				drone_variable += straight(variable)
 			end
 			
-			for d in drones
+			prioritized for d in drones
 				d += straight(locations)
 			end
 			

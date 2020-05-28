@@ -8,7 +8,6 @@ import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiRequestBody;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import utm.domain.OperationManager;
-import utm.domain.ActionExecutorManager;
 import utm.domain.datatypes.Area;
 import utm.webservice.responses.ErrorResponse;
 
@@ -44,7 +43,7 @@ public class NoFlyZonesController {
 	)
 	public static void addNoFlyZone(Context ctx) throws IOException {
 		Area noFlyZone = ctx.bodyAsClass(Area.class);
-		OperationManager.getInstance().onAddNoFlyZone(noFlyZone, new ActionExecutorManager());
+		OperationManager.getInstance().onAddNoFlyZone(noFlyZone);
 		ctx.status(201);
 	}
 	

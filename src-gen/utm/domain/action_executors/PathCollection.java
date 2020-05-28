@@ -2,6 +2,7 @@ package utm.domain.action_executors;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 import utm.domain.datatypes.Time;
 
@@ -17,22 +18,27 @@ public class PathCollection implements Comparable<PathCollection> {
 		return paths;
 	}
 	
-	public Time getEarliestStartTime() {
+	public Optional<Time> getEarliestStartTime() {
 		return paths.stream()
 			.map(path -> path.getStartTime())
-			.min(Time::compareTo)
-			.get();
+			.min(Time::compareTo);
 	}
 	
-	public Time getLatestEndTime() {
+	public Optional<Time> getLatestEndTime() {
 		return paths.stream()
 			.map(path -> path.getEndTime())
-			.max(Time::compareTo)
-			.get();
+			.max(Time::compareTo);
 	}
 	
 	public Duration getLongestDuration() {
-		return this.getEarliestStartTime().between(this.getLatestEndTime());
+		Optional<Time> earliestStart = this.getEarliestStartTime();
+		Optional<Time> latestEnd = this.getLatestEndTime();
+		if (earliestStart.isPresent() && latestEnd.isPresent()) {
+			return earliestStart.get().between(latestEnd.get());
+		}
+		else {
+			return Duration.ZERO;
+		}
 	}
 	
 	@Override

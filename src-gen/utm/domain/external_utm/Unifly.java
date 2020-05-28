@@ -1,4 +1,4 @@
-package utm.domain;
+package utm.domain.external_utm;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -26,7 +26,7 @@ import utm.domain.action_executors.Path;
 import utm.domain.action_executors.PathCollection;
 import utm.domain.datatypes.Area;
 
-public class Unifly {
+public class Unifly implements ExternalUtm {
 	
 	private OkHttpClient client;
 	private String accessToken;
@@ -41,12 +41,14 @@ public class Unifly {
 			.build();
 	}
 	
+	@Override
 	public void createUasOperations(PathCollection pathCollection) throws IOException {
 		for (Path path : pathCollection.getPaths()) {
 			createUasOperation(path);
 		}
 	}
 	
+	@Override
 	public void createUasOperation(Path path) throws IOException {
 		JSONObject pilot = getMyOperatorUser();
 		JSONObject operation = new JSONObject()
@@ -77,13 +79,14 @@ public class Unifly {
 						.collect(Collectors.toList())))
 			);
 		Request postUasoperation = new Request.Builder()
-			.url("https://healthdrone.unifly.tech/api/uasoperations")
+			.url(apiUrl + "/uasoperations")
 			.post(RequestBody.create(operation.toString(), GEOJSON))
 			.build();
 		
 		System.out.println(request(postUasoperation, response -> response.body().string()));
 	}
 	
+	@Override
 	public void createNoFlyZone(Area noFlyZone) throws IOException {
 		JSONObject uas = postUasForNoFlyZone();
 		JSONObject pilot = getMyOperatorUser();

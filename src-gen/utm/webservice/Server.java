@@ -23,19 +23,22 @@ import io.swagger.v3.oas.models.info.Info;
 import utm.domain.datatypes.Location;
 import utm.webservice.objectmapper.LocationObjectMapper;
 
-import utm.webservice.controllers.OperationTestController;
 import utm.webservice.controllers.OperationBasicController;
+import utm.webservice.controllers.OperationTestController;
 import utm.webservice.controllers.NoFlyZonesController;
+import utm.webservice.controllers.OperationsController;
 import utm.webservice.responses.ErrorResponse;
 
 public class Server {
+	
+	private static Javalin javalin;
 	
 	public static void main(String[] args) {
 		Server.launch();
 	}
 	
 	public static void launch() {
-        Javalin.create(config -> {
+        javalin = Javalin.create(config -> {
         	config.registerPlugin(getConfiguredOpenApiPlugin());
         	config.defaultContentType = "application/json";
         	config.enableCorsForAllOrigins();
@@ -54,13 +57,14 @@ public class Server {
 						post(NoFlyZonesController::addNoFlyZone);
 					});
 					path("operations", () -> {
-						path("test", () -> {
-							get(OperationTestController::getOperationTest);
-							post(OperationTestController::createOperationTest);
-						});
+						get(OperationsController::getOperations);
 						path("basic", () -> {
 							get(OperationBasicController::getOperationBasic);
 							post(OperationBasicController::createOperationBasic);
+						});
+						path("test", () -> {
+							get(OperationTestController::getOperationTest);
+							post(OperationTestController::createOperationTest);
 						});
 					});
 				});
@@ -81,15 +85,15 @@ public class Server {
 	)
 	public static void getRoot(Context ctx) {
 		ctx.json(new JSONObject()
-				.put("links", new JSONArray()
-					.put("/swagger-docs")
-					.put("/swagger-ui")
-					.put("/api")
-					.put("/api/noflyzones")
-					.put("/api/operations")
-					.put("/api/operations/test")
-					.put("/api/operations/basic")
-				).toMap());
+			.put("links", new JSONArray()
+				.put("/swagger-docs")
+				.put("/swagger-ui")
+				.put("/api")
+				.put("/api/noflyzones")
+				.put("/api/operations")
+				.put("/api/operations/basic")
+				.put("/api/operations/test")
+			).toMap());
 	}
 	
 	private static OpenApiPlugin getConfiguredOpenApiPlugin() {
@@ -104,5 +108,9 @@ public class Server {
                 });
         return new OpenApiPlugin(options);
     }
+    
+    public static void stop() {
+    	javalin.stop();
+	}
     
 }

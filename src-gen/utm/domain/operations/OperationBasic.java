@@ -7,7 +7,6 @@ import utm.domain.datatypes.NavigationPoint;
 public class OperationBasic {
 	
 	public Drone uas;
-	public NavigationPoint start;
-	public NavigationPoint goal;
+	public List<NavigationPoint> points;
 	
 }

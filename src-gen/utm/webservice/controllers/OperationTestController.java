@@ -23,7 +23,7 @@ public class OperationTestController {
 		description = "Description", 
 		tags = {"OperationTest"}, 
 		responses = {
-			@OpenApiResponse(status = "200", content = {@OpenApiContent(from = String.class)})
+			@OpenApiResponse(status = "200")
 		}
 	)
 	public static void getOperationTest(Context ctx) {
@@ -45,7 +45,7 @@ public class OperationTestController {
 	)
 	public static void createOperationTest(Context ctx) throws IOException {
 		OperationTest operationInfo = ctx.bodyValidator(OperationTest.class).get();
-		OperationManager.getInstance().onCreateOperation(new OperationTestTemplate(UtmDynamic.getInstance(), operationInfo));
+		OperationManager.getInstance().onCreateOperation(new OperationTestTemplate(UtmDynamic.getInstance(), operationInfo).getOperationTemplate());
 		ctx.status(201);
 	}
 	

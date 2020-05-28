@@ -10,7 +10,7 @@ public class OperationTest {
 	public NavigationPoint start;
 	public List<Drone> drones;
 	public Drone a;
-	public List<Location> locations;
+	public List<? extends Location> locations;
 	public Location point;
 	
 }

@@ -48,7 +48,15 @@ public abstract class ActionBuilder {
 		return this;
 	}
 	
-	public ActionBuilder straight(List<Location> locations) {
+	public ActionBuilder straight(Location locations) {
+		if (currentDrones == null) {
+			throw new IllegalStateException("Cannot add action before assigning drone.");
+		}
+		actions.add(new Straight(currentDrones, array(locations)));
+		return this;
+	}
+	
+	public ActionBuilder straight(List<? extends Location> locations) {
 		if (currentDrones == null) {
 			throw new IllegalStateException("Cannot add action before assigning drone.");
 		}
@@ -57,14 +65,6 @@ public abstract class ActionBuilder {
 	}
 	
 	public ActionBuilder straight(Location... locations) {
-		if (currentDrones == null) {
-			throw new IllegalStateException("Cannot add action before assigning drone.");
-		}
-		actions.add(new Straight(currentDrones, array(locations)));
-		return this;
-	}
-	
-	public ActionBuilder straight(Location locations) {
 		if (currentDrones == null) {
 			throw new IllegalStateException("Cannot add action before assigning drone.");
 		}

@@ -16,8 +16,7 @@ public class OperationBasicTemplate extends ActionBuilder {
 	
 	@Override
 	protected void buildActions() {
-		drone(operation.uas).straight(operation.start, operation.goal).
-		drone(operation.uas).straight(operation.start).straight(operation.goal);
+		drone(operation.uas).straight(operation.points);
 	}
 	
 }

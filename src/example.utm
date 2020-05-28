@@ -1,5 +1,11 @@
 utm dynamic:
-	import action straight<location[]>
+	
+	operation basic:
+		uas: drone
+		points: navigation_point[]
+		implementation:
+		import action straight<location[]>
+			uas += straight(points)
 	
 	operation test:
 		start: navigation_point
@@ -8,6 +14,7 @@ utm dynamic:
 		locations: location[]
 		point: location
 		implementation:
+			import action straight<location[]>
 			drones += straight([start])
 			drones += straight(start)
 			
@@ -27,12 +34,5 @@ utm dynamic:
 					y += straight(j)
 				end
 			end
-	
-	
-	operation basic:
-		uas: drone
-		start: navigation_point
-		goal: navigation_point
-		implementation:
-			uas += straight(start, goal)
-			uas += straight(start) + straight(goal)
+
+			

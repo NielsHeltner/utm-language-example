@@ -7,14 +7,14 @@ import utm.dsl.ActionVisitor;
 
 public class Straight extends AbstractAction {
 	
-	private List<Location> locations;
+	private List<? extends Location> locations;
 	
-	public Straight(List<Drone> drones, List<Location> locations) {
+	public Straight(List<Drone> drones, List<? extends Location> locations) {
 		super(drones);
 		this.locations = locations;
 	}
 	
-	public List<Location> getLocations() {
+	public List<? extends Location> getLocations() {
 		return locations;
 	}
 	

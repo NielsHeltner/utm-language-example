@@ -1,6 +1,7 @@
 package utm.domain;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -21,7 +22,7 @@ public class DroneManager {
 	public List<Drone> getAvailableDrones(List<Drone> drones, Time time, int size) {
 		return drones.stream()
 				.filter(drone -> isAvailable(drone, time))
-				.limit(size)
+				.limit(new Random().nextInt(size) + 1)
 				.collect(Collectors.toList());
 	}
 	
